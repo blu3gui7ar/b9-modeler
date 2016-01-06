@@ -8,9 +8,10 @@
         </tree-graph-remove-button>
         <tree-graph-edit-button :x='10' :y='-12' :show='active' @click="onEdit">
         </tree-graph-edit-button>
-        <!--
-        <tree-graph-create-button v-for="btn in buttons" :button="btn"></tree-graph-create-button>
-        -->
+        <tree-graph-create-button v-for="(btn, enabled) in buttons" :show='active' :valid='enabled' :name="btn"
+                :x='10' :y='18 + 30 * $index'
+                @click="onCreate(btn, enabled)">
+        </tree-graph-create-button>
     </g>
 </template>
 
@@ -40,13 +41,9 @@ import TreeGraphEditButton from './TreeGraphEditButton.vue'
 import TreeGraphCreateButton from './TreeGraphCreateButton.vue'
 
 import store from '../store'
-const { activateNode, deleteNode, editNode, foldNode } = store.actions
+const { activateNode, addNode, deleteNode, editNode, foldNode } = store.actions
 
 export default {
-    data () {
-        return {
-        }
-    },
     computed: {
         transform () {
             return 'translate(' + this.node.y + ',' + this.node.x + ')'
@@ -62,6 +59,13 @@ export default {
             } else {
                 return 'white'
             }
+        },
+        buttons () {
+            const metaname = this.node.metaname
+            const metadata = store.state.metadata
+            const handler = metadata.handler(metaname)
+            const gen = handler.childGen(metadata, metadata.meta(metaname))
+            return gen(this.node.children)
         }
     },
     props: {
@@ -71,6 +75,9 @@ export default {
         metadata: Object
     },
     methods: {
+        canAdd (child) {
+            return true
+        },
         onCircleClick (e) {
             foldNode(this.node)
         },
@@ -79,6 +86,11 @@ export default {
         },
         onEdit (e) {
             editNode(this.node)
+        },
+        onCreate (child, valid) {
+            if (valid) {
+                addNode(this.node, child)
+            }
         },
         onMouseOver () {
             activateNode(this.node)

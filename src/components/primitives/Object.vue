@@ -62,6 +62,42 @@ export default {
                 return true
             }
         },
+        childGen (metadata, nodemeta) {
+            let childNodes = []
+            if (Array.isArray(nodemeta.attrs)) {
+                childNodes = _.filter(nodemeta.attrs, metaname =>
+                    metadata.handler(metaname).hasNode(metadata, metadata.meta(metaname))
+                )
+            } else {
+                childNodes = _(nodemeta.attrs)
+                    .map((metaname, name) => { return {m: metaname, n: name}})
+                    .filter(attr => metadata.handler(attr.m).hasNode(metadata, metadata.meta(attr.m)))
+                    .map(attr => attr.n)
+                    .value()
+            }
+
+            return graphChildren => {
+                const keys = _.pluck(graphChildren, 'key')
+                const disabled = _(childNodes).intersection(keys)
+                            .reduce((rs, key) => {
+                                rs[key] = false
+                                return rs
+                            }, {})
+                const enabled = _(childNodes).difference(keys)
+                            .reduce((rs, key) => {
+                                rs[key] = true
+                                return rs
+                            }, {})
+                return _.merge(enabled, disabled)
+            }
+        },
+        childmeta (nodemeta, attr) {
+            if (Array.isArray(nodemeta.attrs)) {
+                return attr
+            } else {
+                return nodemeta.attrs[attr]
+            }
+        },
         graphModel (metadata, nodemeta, data) {
             return _(data || this.defaultValue()).reduce((graphModel, subData, attr) => {
                 let metaname = attr

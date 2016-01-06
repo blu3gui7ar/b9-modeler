@@ -1,12 +1,12 @@
 <template>
-    <svg:g transform="translate({{y}},{{x}})" class="function-btn add" :click="onClick">
-        <svg:title>{{name}}</svg:title>
-        <svg:circle r=12 cx=7 cy=12></svg:circle>
-        <svg:text x=7 y=17 class="function-text" text-anchor="middle"
-            font-weight="bold" font-family="Cursive" font-size=16
-            :text="name[0] | uppercase" >
-        </svg:text>
-    </svg:g>
+    <g :transform="transform" :class="{'function-btn-disabled': !valid}" class="function-btn add" :style='style'>
+        <title>{{name}}</title>
+        <circle r=12 cx=7 cy=12></circle>
+        <text x=7 y=17 class="function-text" text-anchor="middle"
+                font-weight="bold" font-family="Cursive" font-size=16>
+            {{name[0] | uppercase}}
+        </text>
+    </g>
 </template>
 
 <style scoped>
@@ -20,11 +20,11 @@
 .function-btn.add{
   fill: #57D37E;
 }
-.function-btn.remove{
-  fill: #E97979;
+.function-btn-disabled * {
+    opacity: 0.3;
 }
-.function-btn.edit{
-  fill: #79AFE9;
+g:hover > .node-active > .function-btn{
+  opacity: 1;
 }
 .function-text{
   cursor: pointer;
@@ -38,6 +38,22 @@ export default {
         }
     },
     props: {
+        name: String,
+        x: Number,
+        y: Number,
+        show: Boolean,
+        valid: Boolean,
+        node: Object
+    },
+    computed: {
+        style () {
+            return {
+                display: this.show ? 'inline-block' : 'none'
+            }
+        },
+        transform () {
+            return 'translate(' + this.y + ',' + this.x + ')'
+        }
     },
     methods: {
         onClick () {

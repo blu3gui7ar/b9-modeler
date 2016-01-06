@@ -43,6 +43,14 @@ export default {
                 return true
             }
         },
+        childGen (metadata, nodemeta) {
+            const v = nodemeta.value
+            const cns = metadata.handler(v).hasNode(metadata, metadata.meta(v)) ? {[v]: true} : {}
+            return graphChildren => cns
+        },
+        childmeta (nodemeta, child) {
+            return child
+        },
         graphModel (metadata, nodemeta, data) {
             let v = nodemeta.value
             let subHandler = metadata.handler(v)

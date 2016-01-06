@@ -19,12 +19,19 @@ export default {
         }
     },
     handler: {
+        name: 'Ref',
         defaultValue () {
             return ''
         },
         hasNode (metadata, nodemeta) {
             // return nodemeta.flatten !== undefined && !nodemeta.flatten
             return !nodemeta.flatten
+        },
+        childGen (metadata, nodemeta) {
+            return graphChildren => {}
+        },
+        childmeta (nodemeta, child) {
+            return null
         },
         graphModel (metadata, nodemeta, data) {
             return {plain: data}

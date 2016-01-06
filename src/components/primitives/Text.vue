@@ -25,6 +25,12 @@ export default {
         hasNode (metadata, nodemeta) {
             return false
         },
+        childGen (metadata, nodemeta) {
+            return graphChildren => {}
+        },
+        childmeta (nodemeta, child) {
+            return null
+        },
         graphModel (metadata, nodemeta, data) {
             return {plain: data}
         },

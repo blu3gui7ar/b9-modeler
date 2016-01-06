@@ -40,11 +40,19 @@ export default {
         },
         hasNode (metadata, nodemeta) {
             if (nodemeta.flatten) {
-                let v = nodemeta.value
+                const v = nodemeta.value
                 return metadata.handler(v).hasNode(metadata, metadata.meta(v))
             } else {
                 return true
             }
+        },
+        childGen (metadata, nodemeta) {
+            const v = nodemeta.value
+            const cns = metadata.handler(v).hasNode(metadata, metadata.meta(v)) ? {v: true} : {}
+            return graphChildren => cns
+        },
+        childmeta (nodemeta, child) {
+            return child
         },
         graphModel (metadata, nodemeta, data) {
             let v = nodemeta.value

@@ -11,7 +11,7 @@ import {
 
 export const initModeler = ({ dispatch }) => {
     const metaDesc = {
-        model: {type: 'object', flatten: true, attrs: {description: 'desc', attributes: 'attributes', styles: 'styles', images: 'images'}},
+        model: {type: 'object', flatten: true, attrs: {description: 'desc', attributes: 'attributes', styles: 'styles', imgs: 'images'}},
         desc: {type: 'map', flatten: true, value: 'info'},
         attributes: {type: 'list', value: 'attribute'},
         attribute: {type: 'ref', target: 'attribute:'},
@@ -38,7 +38,7 @@ export const initModeler = ({ dispatch }) => {
                 'style:456',
                 'style:789'
             ],
-            images: [
+            imgs: [
                 'image:123',
                 'image:456',
                 'image:789'
@@ -49,8 +49,8 @@ export const initModeler = ({ dispatch }) => {
     dispatch(SET_DATA, metaDesc, data)
 }
 
-export const addNode = ({ dispatch }) => {
-    dispatch(ADD_NODE)
+export const addNode = ({ dispatch }, node, child) => {
+    dispatch(ADD_NODE, node, child)
 }
 
 export const activateNode = ({ dispatch }, node) => {
