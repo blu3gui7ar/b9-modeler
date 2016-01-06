@@ -1,4 +1,4 @@
-# hermes-modeler
+# b9-modeler
 
 > Metadata based Json Modeler Widget
 
