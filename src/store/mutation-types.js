@@ -1,0 +1,8 @@
+export const SET_DATA = 'SET_DATA'
+export const ACTIVATE_NODE = 'ACTIVATE_NODE'
+export const ADD_NODE = 'ADD_NODE'
+export const DELETE_NODE = 'DELETE_NODE'
+export const EDIT_NODE = 'EDIT_NODE'
+export const FOLD_NODE = 'FOLD_NODE'
+export const MODIFY_PLAIN = 'MODIFY_PLAIN'
+export const SET_PLAIN = 'SET_PLAIN'

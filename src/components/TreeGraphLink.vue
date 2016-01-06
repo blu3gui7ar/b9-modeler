@@ -1,0 +1,56 @@
+<template>
+    <path class="link" transition="relocate">
+    </path>
+</template>
+
+<style scoped>
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+</style>
+
+<script>
+import store from '../store'
+import d3 from 'd3'
+const diagonal = d3.svg.diagonal().projection(d => [d.y, d.x])
+
+export default {
+    props: {
+        link: Object
+    },
+    methods: {
+        relocate (from, to) {
+            d3.select(this.$el)
+                .transition()
+                .duration(500)
+                .attr('d', diagonal(this.link))
+        }
+    },
+    watch: {
+        '{x: link.target.x, y: link.target.y}': 'relocate'
+    },
+    transitions: {
+        'relocate': {
+            css: false,
+            enter (el, done) {
+                const d3e = d3.select(el)
+                d3e.attr('d', diagonal({source: store.state.relocateSource, target: store.state.relocateSource}))
+                d3e.transition()
+                    .duration(500)
+                    .attr('d', diagonal(this.link))
+                    .each('end', done)
+            },
+            leave (el, done) {
+                const d3e = d3.select(el)
+                d3e.transition()
+                    .duration(500)
+                    .attr('d', diagonal({source: store.state.relocateSource, target: store.state.relocateSource}))
+                    .each('end', done)
+
+            }
+        }
+    }
+}
+</script>
