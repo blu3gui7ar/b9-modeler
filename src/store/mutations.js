@@ -28,10 +28,12 @@ export const modelerMutations = {
         const metadata = state.metadata
         const handler = metadata.handler(node.metaname)
         const newModel = handler.createChildModel(node, child)
-        if (!node.children) {
-            Vue.set(node, 'children', [])
+        if (_.isArray(node._children)) {
+            node._children.push(newModel)
+        } else if (_.isArray(node.children)) {
             node.children.push(newModel)
         } else {
+            Vue.set(node, 'children', [])
             node.children.push(newModel)
         }
         state.relocateSource = {x: node.x, y: node.y}
@@ -53,7 +55,7 @@ export const modelerMutations = {
             Vue.set(node, 'children', node._children)
             node._children = null
             state.relocateSource = {x: node.x, y: node.y}
-        } else if (Array.isArray(node.children) && node.children.length > 0) {
+        } else if (_.isArray(node.children) && node.children.length > 0) {
             node._children = node.children
             node.children = []
             state.relocateSource = node

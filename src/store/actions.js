@@ -50,6 +50,9 @@ export const initModeler = ({ dispatch }) => {
 }
 
 export const addNode = ({ dispatch }, node, child) => {
+    if (node._children) {
+        dispatch(FOLD_NODE, node)
+    }
     dispatch(ADD_NODE, node, child)
 }
 

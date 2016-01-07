@@ -1,12 +1,12 @@
 <template>
     <div>
         <label>{{nodename}}: </label>
-        <div v-for="(attr, childmeta) in attrs">
-            <component :is='component(childmeta)'
+        <div v-for="(attr, value) in nodedata">
+            <component :is='component(attrMeta(attr))'
                        :nodename='attr'
                        :nodekey='attr'
-                       :metaname='childmeta'
-                       :nodedata='attrData(attr)'>
+                       :metaname='attrMeta(attr)'
+                       :nodedata='value'>
             </component>
         </div>
     </div>
@@ -72,7 +72,7 @@ export class ObjectHandler extends DefaultHandler {
         const nodemeta = this.nodemeta
         return _(data || this.defaultData()).reduce((graphModel, subData, attr) => {
             let metaname = attr
-            if (!Array.isArray(nodemeta.attrs)) {
+            if (!_.isArray(nodemeta.attrs)) {
                 metaname = nodemeta.attrs[attr]
             }
             const subHandler = metadata.handler(metaname)
@@ -111,20 +111,9 @@ export default {
     props: {
         nodedata: Object
     },
-    computed: {
-        attrs () {
-            return _.reduce(this.nodemeta.attrs, (attrs, metaname, key) => {
-                const subHandler = this.metadata.handler(metaname)
-                if (!subHandler.hasNode()) {
-                    attrs[key] = metaname
-                }
-                return attrs
-            }, {})
-        }
-    },
     methods: {
-        attrData (attr) {
-            return this.nodedata[attr] || this.metadata.handler(this.metaname).defaultData()
+        attrMeta (attr) {
+            return _.isArray(this.nodemeta.attrs) ? attr : this.nodemeta.attrs[attr]
         },
         onUpdate (child, modify) {
             this.$parent.$emit('update', this.nodekey, target => modify(target[child]))
