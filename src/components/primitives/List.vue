@@ -55,8 +55,8 @@ export class ListHandler extends DefaultHandler {
         return _(data || this.defaultData()).reduce((graphModel, subData, index) => {
             if (hasNode) {
                 let subModel = subHandler.toGraphModel(subData)
-                subModel.key = index
                 subModel.name = v + '[' + subModel.id + ']'// + ': ' + subData
+                subModel.key = subModel.id
                 subModel.metaname = v
                 graphModel.children.push(metadata.wrap(subModel))
             } else {
