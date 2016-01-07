@@ -77,7 +77,7 @@ export class ListHandler extends DefaultHandler {
         if (graphModel.plain !== undefined) {
             d = [...graphModel.plain, ...d]
         }
-        return d
+        return _.filter(d, x => x !== null && x !== undefined)
     }
 }
 
