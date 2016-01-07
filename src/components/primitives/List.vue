@@ -35,12 +35,10 @@ export class ListHandler extends DefaultHandler {
     }
     createChildModel (graphModel, childName, childData, childKey) {
         const children = graphModel._children || graphModel.children
-        if (_.isArray(children)) {
-            children.forEach((child, index) => child.name = child.metaname + '[' + index + ']')
-        }
         childKey = childKey || (_.isArray(children) ? children.length : 0)
-        childName = childName + '[' + childKey + ']'
-        return super.createChildModel(graphModel, childName, childData, childKey)
+        const childModel = super.createChildModel(graphModel, childName, childData, childKey)
+        childModel.name = childName + '[' + childModel.id + ']'
+        return childModel
     }
     childGen (childModels) {
         const metadata = this.metadata
@@ -57,15 +55,15 @@ export class ListHandler extends DefaultHandler {
         return _(data || this.defaultData()).reduce((graphModel, subData, index) => {
             if (hasNode) {
                 let subModel = subHandler.toGraphModel(subData)
-                subModel.name = v + '[' + index + ']'// + ': ' + subData
                 subModel.key = index
+                subModel.name = v + '[' + subModel.id + ']'// + ': ' + subData
                 subModel.metaname = v
                 graphModel.children.push(metadata.wrap(subModel))
             } else {
                 graphModel.plain[index] = subData
             }
             return graphModel
-        }, {children: [], plain: []})
+        }, this.metadata.wrap({plain: []}))
     }
     toData (graphModel) {
         let d = []

@@ -3,6 +3,7 @@ import registry from './registry'
 export default class Metadata {
     constructor (desc) {
         this.desc = desc
+        this.count = 0
     }
     type (metaname) {
         var type = 'text'
@@ -28,7 +29,7 @@ export default class Metadata {
             children: (node.children === undefined ? [] : node.children),
             _children: null,
             plain: (node.plain === undefined ? '' : node.plain),
-            id: null,
+            id: node.id || this.count++,
             x: 0,
             y: 0
         }

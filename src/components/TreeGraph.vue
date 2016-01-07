@@ -23,7 +23,6 @@ export default {
     data () {
         return {
             linkMap: {},
-            count: 0,
             left: 50,
             right: 100,
             top: 10,
@@ -37,12 +36,7 @@ export default {
     },
     computed: {
         nodes () {
-            const nodes = _.forEach(layout.nodes(this.model).reverse(), n => {
-                if (n.id === null) {
-                    n.id = ++this.count
-                }
-            })
-
+            const nodes = layout.nodes(this.model).reverse()
             this.linkMap = _.reduce(layout.links(nodes), (newMap, link) => {
                 const l = this.linkMap[link.target.id]
                 newMap[link.target.id] = (l !== undefined) ? l : link

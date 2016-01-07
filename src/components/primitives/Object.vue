@@ -86,7 +86,7 @@ export class ObjectHandler extends DefaultHandler {
                 graphModel.plain[attr] = subData
             }
             return graphModel
-        }, {children: [], plain: {}})
+        }, this.metadata.wrap({plain: {}}))
     }
     toData (graphModel) {
         const metadata = this.metadata

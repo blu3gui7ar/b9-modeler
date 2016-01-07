@@ -58,7 +58,7 @@ export class MapHandler extends DefaultHandler {
                 graphModel.plain[key] = subData
             }
             return graphModel
-        }, {children: [], plain: {}})
+        }, this.metadata.wrap({plain: {}}))
     }
     toData (graphModel) {
         const metadata = this.metadata

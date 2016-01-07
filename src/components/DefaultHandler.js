@@ -28,7 +28,7 @@ export default class DefaultHandler {
     }
     toGraphModel (data) {
         data = (data === undefined ? this.defaultData() : data)
-        return {plain: data}
+        return this.metadata.wrap({plain: data})
     }
     toData (graphModel) {
         return graphModel.plain === undefined ? this.defaultData() : graphModel.plain
