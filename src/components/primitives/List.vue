@@ -34,7 +34,11 @@ export class ListHandler extends DefaultHandler {
         return this.nodemeta.value
     }
     createChildModel (graphModel, childName, childData, childKey) {
-        childKey = childKey || (_.isArray(graphModel.children) ? graphModel.children.length : 0)
+        const children = graphModel._children || graphModel.children
+        if (_.isArray(children)) {
+            children.forEach((child, index) => child.name = child.metaname + '[' + index + ']')
+        }
+        childKey = childKey || (_.isArray(children) ? children.length : 0)
         childName = childName + '[' + childKey + ']'
         return super.createChildModel(graphModel, childName, childData, childKey)
     }
