@@ -34,10 +34,9 @@ export class ListHandler extends DefaultHandler {
         return this.nodemeta.value
     }
     createChildModel (graphModel, childName, childData, childKey) {
-        const children = graphModel._children || graphModel.children
-        childKey = childKey || (_.isArray(children) ? children.length : 0)
         const childModel = super.createChildModel(graphModel, childName, childData, childKey)
         childModel.name = childName + '[' + childModel.id + ']'
+        childModel.key = childModel.id
         return childModel
     }
     childGen (childModels) {
