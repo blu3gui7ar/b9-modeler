@@ -70,9 +70,11 @@ export class ListHandler extends DefaultHandler {
             const metaname = childModel.metaname
             const subHandler = metadata.handler(metaname)
             const subData = subHandler.toData(childModel)
-            data[childModel.key] = subData
+            data.push({index: childModel.key, data: subData})
             return data
         }, [])
+
+        d = _(d).sortBy('index').pluck('data').value()
 
         if (graphModel.plain !== undefined) {
             d = [...graphModel.plain, ...d]
@@ -91,10 +93,7 @@ export default {
             this.$parent.$emit('update', this.nodekey, target => modify(target[child]))
         },
         onSet (child, value) {
-            console.log(child, value)
-            this.$parent.$emit('update', this.nodekey, target => {
-                target[child] = value
-            })
+            this.$parent.$emit('update', this.nodekey, target => target[child] = value)
         }
     },
     handler (metadata, metaname) {
