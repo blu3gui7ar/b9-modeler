@@ -2,7 +2,7 @@
     <div v-for="(idx, value) in nodedata">
         <component :is='component(nodemeta.value)'
                    :nodename='idx'
-                   :nodekey='idx'
+                   :noderef='idx'
                    :metaname='nodemeta.value'
                    :nodedata='value'
         >
@@ -92,10 +92,10 @@ export default {
     },
     methods: {
         onUpdate (child, modify) {
-            this.$parent.$emit('update', this.nodekey, target => modify(target[child]))
+            this.$parent.$emit('update', this.noderef, target => modify(target[child]))
         },
         onSet (child, value) {
-            this.$parent.$emit('update', this.nodekey, target => target[child] = value)
+            this.$parent.$emit('update', this.noderef, target => target[child] = value)
         }
     },
     handler (metadata, metaname) {

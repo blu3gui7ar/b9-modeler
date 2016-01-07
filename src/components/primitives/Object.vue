@@ -4,7 +4,7 @@
         <div v-for="(attr, value) in nodedata">
             <component :is='component(attrMeta(attr))'
                        :nodename='attr'
-                       :nodekey='attr'
+                       :noderef='attr'
                        :metaname='attrMeta(attr)'
                        :nodedata='value'>
             </component>
@@ -116,10 +116,10 @@ export default {
             return _.isArray(this.nodemeta.attrs) ? attr : this.nodemeta.attrs[attr]
         },
         onUpdate (child, modify) {
-            this.$parent.$emit('update', this.nodekey, target => modify(target[child]))
+            this.$parent.$emit('update', this.noderef, target => modify(target[child]))
         },
         onSet (child, value) {
-            this.$parent.$emit('update', this.nodekey, target => target[child] = value)
+            this.$parent.$emit('update', this.noderef, target => target[child] = value)
         }
     },
     handler (metadata, metaname) {

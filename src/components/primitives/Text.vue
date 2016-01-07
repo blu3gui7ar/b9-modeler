@@ -16,7 +16,7 @@ export default {
     },
     methods: {
         onInput (e) {
-            this.$parent.$emit('set', this.nodekey, e.target.value)
+            this.$parent.$emit('set', this.noderef, e.target.value)
         }
     },
     handler (metadata, metaname) {

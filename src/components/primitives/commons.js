@@ -7,7 +7,7 @@ export default {
                 return typeof value === 'number' || typeof value === 'string'
             }
         },
-        nodekey: {
+        noderef: {
             validator (value) {
                 return typeof value === 'number' || typeof value === 'string'
             }
