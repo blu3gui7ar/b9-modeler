@@ -68,15 +68,12 @@ export class ListHandler extends DefaultHandler {
         }, {children: [], plain: []})
     }
     toData (graphModel) {
-        const metadata = this.metadata
+        let d = []
         const children = graphModel._children || graphModel.children
-        let d = _.reduce(children, (data, childModel) => {
-            const subData = metadata.handler(childModel.metaname).toData(childModel)
-            data.push({index: childModel.key, data: subData})
-            return data
-        }, [])
-
-        d = _(d).sortBy('index').pluck('data').value()
+        for (const childModel of children) {
+            const subData = this.metadata.handler(childModel.metaname).toData(childModel)
+            d.push(subData)
+        }
 
         if (graphModel.plain !== undefined) {
             d = [...graphModel.plain, ...d]
