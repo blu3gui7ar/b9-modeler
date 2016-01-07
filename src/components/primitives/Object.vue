@@ -127,14 +127,10 @@ export default {
             return this.nodedata[attr] || this.metadata.handler(this.metaname).defaultData()
         },
         onUpdate (child, modify) {
-            this.$parent.$emit('update', this.nodekey, target => {
-                modify(target[child])
-            })
+            this.$parent.$emit('update', this.nodekey, target => modify(target[child]))
         },
         onSet (child, value) {
-            this.$parent.$emit('update', this.nodekey, target => {
-                target[child] = value
-            })
+            this.$parent.$emit('update', this.nodekey, target => target[child] = value)
         }
     },
     handler (metadata, metaname) {
