@@ -1,7 +1,7 @@
 <template>
     <component :is='component(node.metaname)'
                :nodename='node.name'
-               :noderef=''
+               :noderef='""'
                :metaname='node.metaname'
                :nodedata='node.plain'>
     </component>
