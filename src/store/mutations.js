@@ -34,7 +34,7 @@ export const modelerMutations = {
         } else {
             node.children.push(newModel)
         }
-        state.relocateSource = node
+        state.relocateSource = {x: node.x, y: node.y}
     },
     [ACTIVATE_NODE] (state, node) {
         state.activeNode = node
