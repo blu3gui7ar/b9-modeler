@@ -16,6 +16,95 @@
 import _ from 'lodash'
 import commons from './commons'
 import metacomp from '../metacomp'
+import DefaultHandler from '../DefaultHandler'
+
+export class ObjectHandler extends DefaultHandler {
+    defaultData () {
+        return {}
+    }
+    hasNode () {
+        if (this.nodemeta.flatten) {
+            return _.some(this.nodemeta.attrs, type =>
+                this.metadata.handler(type).hasNode(this.metadata, this.metadata.meta(type))
+            )
+        } else {
+            return true
+        }
+    }
+    childMetaName (childName, childKey) {
+        if (_.isArray(this.nodemeta.attrs)) {
+            return childName
+        } else {
+            return this.nodemeta.attrs[childName]
+        }
+    }
+    childGen (childModels) {
+        const metadata = this.metadata
+        const nodemeta = this.nodemeta
+        let childNodes = []
+        if (_.isArray(nodemeta.attrs)) {
+            childNodes = _.filter(nodemeta.attrs, metaname =>
+                metadata.handler(metaname).hasNode(metadata, metadata.meta(metaname))
+            )
+        } else {
+            childNodes = _(nodemeta.attrs)
+                .map((metaname, name) => { return {m: metaname, n: name}})
+                .filter(attr => metadata.handler(attr.m).hasNode(metadata, metadata.meta(attr.m)))
+                .map(attr => attr.n)
+                .value()
+        }
+
+        const keys = _.pluck(childModels, 'key')
+        const disabled = _(childNodes).intersection(keys)
+            .reduce((rs, key) => {
+                rs[key] = false
+                return rs
+            }, {})
+        const enabled = _(childNodes).difference(keys)
+            .reduce((rs, key) => {
+                rs[key] = true
+                return rs
+            }, {})
+        return _.merge(enabled, disabled)
+    }
+    toGraphModel (data) {
+        const metadata = this.metadata
+        const nodemeta = this.nodemeta
+        return _(data || this.defaultData()).reduce((graphModel, subData, attr) => {
+            let metaname = attr
+            if (!Array.isArray(nodemeta.attrs)) {
+                metaname = nodemeta.attrs[attr]
+            }
+            const subHandler = metadata.handler(metaname)
+            if (subHandler.hasNode()) {
+                const subModel = subHandler.toGraphModel(subData)
+                subModel.name = attr
+                subModel.key = attr
+                subModel.metaname = metaname
+                graphModel.children.push(metadata.wrap(subModel))
+            } else {
+                graphModel.plain[attr] = subData
+            }
+            return graphModel
+        }, {children: [], plain: {}})
+    }
+    toData (graphModel) {
+        const metadata = this.metadata
+        const children = graphModel._children || graphModel.children
+        let d = _.reduce(children, (data, childModel) => {
+            const metaname = childModel.metaname
+            const subHandler = metadata.handler(metaname)
+            const subData = subHandler.toData(childModel)
+            data[childModel.key] = subData
+            return data
+        }, {})
+
+        if (graphModel.plain !== undefined) {
+            d = {...graphModel.plain, ...d}
+        }
+        return d
+    }
+}
 
 export default {
     mixins: [commons, metacomp],
@@ -26,8 +115,7 @@ export default {
         attrs () {
             return _.reduce(this.nodemeta.attrs, (attrs, metaname, key) => {
                 const subHandler = this.metadata.handler(metaname)
-                const subMeta = this.metadata.meta(metaname)
-                if (!subHandler.hasNode(this.metadata, subMeta)) {
+                if (!subHandler.hasNode()) {
                     attrs[key] = metaname
                 }
                 return attrs
@@ -36,7 +124,7 @@ export default {
     },
     methods: {
         attrData (attr) {
-            return this.nodedata[attr] || this.metadata.handler(this.metaname).defaultValue()
+            return this.nodedata[attr] || this.metadata.handler(this.metaname).defaultData()
         },
         onUpdate (child, modify) {
             this.$parent.$emit('update', this.nodekey, target => {
@@ -49,91 +137,8 @@ export default {
             })
         }
     },
-    handler: {
-        defaultValue () {
-            return {}
-        },
-        hasNode (metadata, nodemeta) {
-            if (nodemeta.flatten) {
-                return _.some(nodemeta.attrs, type =>
-                    metadata.handler(type).hasNode(metadata, metadata.meta(type))
-                )
-            } else {
-                return true
-            }
-        },
-        childGen (metadata, nodemeta) {
-            let childNodes = []
-            if (Array.isArray(nodemeta.attrs)) {
-                childNodes = _.filter(nodemeta.attrs, metaname =>
-                    metadata.handler(metaname).hasNode(metadata, metadata.meta(metaname))
-                )
-            } else {
-                childNodes = _(nodemeta.attrs)
-                    .map((metaname, name) => { return {m: metaname, n: name}})
-                    .filter(attr => metadata.handler(attr.m).hasNode(metadata, metadata.meta(attr.m)))
-                    .map(attr => attr.n)
-                    .value()
-            }
-
-            return graphChildren => {
-                const keys = _.pluck(graphChildren, 'key')
-                const disabled = _(childNodes).intersection(keys)
-                            .reduce((rs, key) => {
-                                rs[key] = false
-                                return rs
-                            }, {})
-                const enabled = _(childNodes).difference(keys)
-                            .reduce((rs, key) => {
-                                rs[key] = true
-                                return rs
-                            }, {})
-                return _.merge(enabled, disabled)
-            }
-        },
-        childmeta (nodemeta, attr) {
-            if (Array.isArray(nodemeta.attrs)) {
-                return attr
-            } else {
-                return nodemeta.attrs[attr]
-            }
-        },
-        graphModel (metadata, nodemeta, data) {
-            return _(data || this.defaultValue()).reduce((graphModel, subData, attr) => {
-                let metaname = attr
-                if (!Array.isArray(nodemeta.attrs)) {
-                    metaname = nodemeta.attrs[attr]
-                }
-                const subHandler = metadata.handler(metaname)
-                const subMeta = metadata.meta(metaname)
-                if (subHandler.hasNode(metadata, subMeta)) {
-                    const subModel = subHandler.graphModel(metadata, subMeta, subData)
-                    subModel.name = attr
-                    subModel.key = attr
-                    subModel.metaname = metaname
-                    graphModel.children.push(metadata.wrap(subModel))
-                } else {
-                    graphModel.plain[attr] = subData
-                }
-                return graphModel
-            }, {children: [], plain: {}})
-        },
-        asData (metadata, nodemeta, graphModel) {
-            const children = graphModel._children || graphModel.children
-            let d = _.reduce(children, (data, childModel) => {
-                const metaname = childModel.metaname
-                const subHandler = metadata.handler(metaname)
-                const subMeta = metadata.meta(metaname)
-                const subData = subHandler.asData(metadata, subMeta, childModel)
-                data[childModel.key] = subData
-                return data
-            }, {})
-
-            if (graphModel.plain !== undefined) {
-                d = {...graphModel.plain, ...d}
-            }
-            return d
-        }
+    handler (metadata, metaname) {
+        return new ObjectHandler(metadata, metaname)
     }
 }
 </script>

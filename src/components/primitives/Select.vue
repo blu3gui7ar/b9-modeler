@@ -11,6 +11,7 @@
 <script>
 import commons from './commons'
 import metacomp from '../metacomp'
+import DefaultHandler from '../DefaultHandler'
 
 export default {
     mixins: [commons, metacomp],
@@ -22,25 +23,8 @@ export default {
             this.$parent.$emit('set', this.nodekey, e.target.value)
         }
     },
-    handler: {
-        defaultValue () {
-            return ''
-        },
-        hasNode (metadata, nodemeta) {
-            return false
-        },
-        childGen (metadata, nodemeta) {
-            return graphChildren => {}
-        },
-        childmeta (nodemeta, child) {
-            return null
-        },
-        graphModel (metadata, nodemeta, data) {
-            return {plain: data}
-        },
-        asData (metadata, nodemeta, graphModel) {
-            return graphModel.plain
-        }
+    handler (metadata, metaname) {
+        return new DefaultHandler(metadata, metaname)
     }
 }
 </script>

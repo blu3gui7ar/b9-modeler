@@ -14,6 +14,72 @@
 import _ from 'lodash'
 import commons from './commons'
 import metacomp from '../metacomp'
+import DefaultHandler from '../DefaultHandler'
+
+export class ListHandler extends DefaultHandler {
+    defaultData () {
+        return []
+    }
+    hasNode () {
+        const metadata = this.metadata
+        const nodemeta = this.nodemeta
+        if (nodemeta.flatten) {
+            let v = nodemeta.value
+            return metadata.handler(v).hasNode(metadata, metadata.meta(v))
+        } else {
+            return true
+        }
+    }
+    childMetaName (childName, childKey) {
+        return this.nodemeta.value
+    }
+    createChildModel (graphModel, childName, childData, childKey) {
+        childKey = childKey || (_.isArray(graphModel.children) ? graphModel.children.length : 0)
+        childName = childName + '[' + childKey + ']'
+        return super.createChildModel(graphModel, childName, childData, childKey)
+    }
+    childGen (childModels) {
+        const metadata = this.metadata
+        const nodemeta = this.nodemeta
+        const v = nodemeta.value
+        return metadata.handler(v).hasNode(metadata, metadata.meta(v)) ? {[v]: true} : {}
+    }
+    toGraphModel (data) {
+        const metadata = this.metadata
+        const nodemeta = this.nodemeta
+        let v = nodemeta.value
+        let subHandler = metadata.handler(v)
+        let hasNode = subHandler.hasNode()
+        return _(data || this.defaultData()).reduce((graphModel, subData, index) => {
+            if (hasNode) {
+                let subModel = subHandler.toGraphModel(subData)
+                subModel.name = v + '[' + index + ']'// + ': ' + subData
+                subModel.key = index
+                subModel.metaname = v
+                graphModel.children.push(metadata.wrap(subModel))
+            } else {
+                graphModel.plain[index] = subData
+            }
+            return graphModel
+        }, {children: [], plain: []})
+    }
+    toData (graphModel) {
+        const metadata = this.metadata
+        const children = graphModel._children || graphModel.children
+        let d = _.reduce(children, (data, childModel) => {
+            const metaname = childModel.metaname
+            const subHandler = metadata.handler(metaname)
+            const subData = subHandler.toData(childModel)
+            data[childModel.key] = subData
+            return data
+        }, [])
+
+        if (graphModel.plain !== undefined) {
+            d = [...graphModel.plain, ...d]
+        }
+        return d
+    }
+}
 
 export default {
     mixins: [commons, metacomp],
@@ -31,60 +97,8 @@ export default {
             })
         }
     },
-    handler: {
-        defaultValue () {
-            return []
-        },
-        hasNode (metadata, nodemeta) {
-            if (nodemeta.flatten) {
-                let v = nodemeta.value
-                return metadata.handler(v).hasNode(metadata, metadata.meta(v))
-            } else {
-                return true
-            }
-        },
-        childGen (metadata, nodemeta) {
-            const v = nodemeta.value
-            const cns = metadata.handler(v).hasNode(metadata, metadata.meta(v)) ? {[v]: true} : {}
-            return graphChildren => cns
-        },
-        childmeta (nodemeta, child) {
-            return child
-        },
-        graphModel (metadata, nodemeta, data) {
-            let v = nodemeta.value
-            let subHandler = metadata.handler(v)
-            let subMeta = metadata.meta(v)
-            let hasNode = subHandler.hasNode(metadata, subMeta)
-            return _(data || this.defaultValue()).reduce((graphModel, subData, index) => {
-                if (hasNode) {
-                    let subModel = subHandler.graphModel(metadata, subMeta, subData)
-                    subModel.name = v + '[' + index + ']'// + ': ' + subData
-                    subModel.key = index
-                    subModel.metaname = v
-                    graphModel.children.push(metadata.wrap(subModel))
-                } else {
-                    graphModel.plain[index] = subData
-                }
-                return graphModel
-            }, {children: [], plain: []})
-        },
-        asData (metadata, nodemeta, graphModel) {
-            const children = graphModel._children || graphModel.children
-            let d = _.reduce(children, (data, childModel) => {
-                const metaname = childModel.metaname
-                const subHandler = metadata.handler(metaname)
-                const subMeta = metadata.meta(metaname)
-                const subData = subHandler.asData(metadata, subMeta, childModel)
-                data[childModel.key] = subData
-                return data
-            }, [])
-
-            if (graphModel.plain !== undefined) {
-                d = [...graphModel.plain, ...d]
-            }
-            return d
-        }
+    handler (metadata, metaname) {
+        return new ListHandler(metadata, metaname)
     }
 }
 </script>

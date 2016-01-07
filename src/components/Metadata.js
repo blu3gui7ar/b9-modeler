@@ -3,24 +3,23 @@ import registry from './registry'
 export default class Metadata {
     constructor (desc) {
         this.desc = desc
-        this.handlers = {}
     }
-    type (name) {
+    type (metaname) {
         var type = 'text'
-        if (undefined !== this.desc[name]) {
-            var node = this.desc[name]
+        if (undefined !== this.desc[metaname]) {
+            var node = this.desc[metaname]
             type = node.type
         }
         return type
     }
-    meta (name) {
-        return this.desc[name]
+    meta (metaname) {
+        return this.desc[metaname]
     }
-    component (name) {
-        return registry.getComponentName(this.type(name))
+    component (metaname) {
+        return registry.getComponentName(this.type(metaname))
     }
-    handler (name) {
-        return registry.get(this.type(name)).handler
+    handler (metaname) {
+        return registry.get(this.type(metaname)).handler(this, metaname)
     }
     wrap (node) {
         let wrapped = {
@@ -38,9 +37,8 @@ export default class Metadata {
     }
     toGraphModel (data, name, metaname, fold = false) {
         metaname = metaname || name
-        const handler = this.handler(name)
-        const nodemeta = this.meta(name)
-        let model = handler.graphModel(this, nodemeta, data)
+        const handler = this.handler(metaname)
+        let model = handler.toGraphModel(data)
         model.name = name
         model.metaname = metaname
         model = this.wrap(model)
@@ -52,11 +50,8 @@ export default class Metadata {
     }
     fromGraphModel (graphModel, name, metaname) {
         metaname = metaname || name
-        const handler = this.handler(name)
-        const nodemeta = this.meta(name)
-        const data = {}
-        data[name] = handler.asData(this, nodemeta, graphModel)
-        return data
+        const handler = this.handler(metaname)
+        return {[name]: handler.toData(graphModel)}
     }
 }
 

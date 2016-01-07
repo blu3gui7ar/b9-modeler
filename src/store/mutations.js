@@ -27,20 +27,14 @@ export const modelerMutations = {
     [ADD_NODE] (state, node, child) {
         const metadata = state.metadata
         const handler = metadata.handler(node.metaname)
-        const nodemeta = metadata.meta(node.metaname)
-        const childmetaname = handler.childmeta(nodemeta, child)
-        const childmeta = metadata.meta(childmetaname)
-        const childHandler = metadata.handler(childmetaname)
-        let newNode = childHandler.graphModel(metadata, childmeta, childHandler.defaultValue())
-        newNode.name = child
-        newNode.key = child
-        newNode.metaname = childmetaname
-        newNode = metadata.wrap(newNode)
+        const newModel = handler.createChildModel(node, child)
         if (!node.children) {
-            Vue.set(node, 'children', [newNode])
+            Vue.set(node, 'children', [])
+            node.children.push(newModel)
         } else {
-            node.children.push(newNode)
+            node.children.push(newModel)
         }
+        state.relocateSource = node
     },
     [ACTIVATE_NODE] (state, node) {
         state.activeNode = node

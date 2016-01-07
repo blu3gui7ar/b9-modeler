@@ -7,6 +7,14 @@
 <script>
 import commons from './commons'
 import metacomp from '../metacomp'
+import DefaultHandler from '../DefaultHandler'
+
+export class RefHandler extends DefaultHandler {
+    hasNode () {
+        // return nodemeta.flatten !== undefined && !nodemeta.flatten
+        return !this.nodemeta.flatten
+    }
+}
 
 export default {
     mixins: [commons, metacomp],
@@ -18,27 +26,8 @@ export default {
             this.$parent.$emit('set', this.nodekey, e.target.value)
         }
     },
-    handler: {
-        name: 'Ref',
-        defaultValue () {
-            return ''
-        },
-        hasNode (metadata, nodemeta) {
-            // return nodemeta.flatten !== undefined && !nodemeta.flatten
-            return !nodemeta.flatten
-        },
-        childGen (metadata, nodemeta) {
-            return graphChildren => {}
-        },
-        childmeta (nodemeta, child) {
-            return null
-        },
-        graphModel (metadata, nodemeta, data) {
-            return {plain: data}
-        },
-        asData (metadata, nodemeta, graphModel) {
-            return graphModel.plain
-        }
+    handler (metadata, metaname) {
+        return new RefHandler(metadata, metaname)
     }
 }
 </script>

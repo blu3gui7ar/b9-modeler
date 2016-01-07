@@ -64,8 +64,7 @@ export default {
             const metaname = this.node.metaname
             const metadata = store.state.metadata
             const handler = metadata.handler(metaname)
-            const gen = handler.childGen(metadata, metadata.meta(metaname))
-            return gen(this.node.children)
+            return handler.childGen(this.node.children)
         }
     },
     props: {
