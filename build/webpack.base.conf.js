@@ -1,11 +1,18 @@
 var path = require('path')
 
 module.exports = {
-  entry: './src/main.js',
+  entry: {
+      'b9-modeler': [
+          './src/main.js'
+      ],
+      'b9-modeler-sample': [
+          './src/sample/index.js'
+      ]
+  },
   output: {
-    path: path.resolve(__dirname, '../dist/static'),
-    publicPath: '/static/',
-    filename: 'build.js'
+    path: path.resolve(__dirname, '../dist'),
+    publicPath: '/',
+    filename: '[name].js'
   },
   resolve: {
     extensions: ['', '.js', '.vue'],

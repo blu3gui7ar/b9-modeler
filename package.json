@@ -1,13 +1,39 @@
 {
   "name": "b9-modeler",
+  "version": "0.1.0",
   "description": "Metadata based Json Modeler Widget",
-  "author": "blu3gui7ar",
+  "keywords": [
+    "vue",
+    "vuex",
+    "d3",
+    "json",
+    "metadata",
+    "schema"
+  ],
+  "author": {
+    "email": "blu3gui7ar@gmail.com",
+    "name": "blu3gui7ar"
+  },
+  "homepage": "https://github.com/blu3gui7ar/b9-modeler",
+  "license": "Apache License 2.0",
+  "bugs": {
+    "url": "https://github.com/blu3gui7ar/b9-modeler/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blu3gui7ar/b9-modeler.git"
+  },
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --hot --config build/webpack.dev.conf.js",
     "build": "webpack --progress --hide-modules --config build/webpack.prod.conf.js",
     "test": "karma start build/karma.conf.js --single-run"
   },
+  "files": [
+    "dist/b9-modeler.js",
+    "src"
+  ],
+  "main": "dist/b9-modeler.js",
   "dependencies": {
     "d3": "^3.5.12",
     "lodash": "^3.10.1",
