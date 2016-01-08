@@ -4,9 +4,6 @@ module.exports = {
   entry: {
       'b9-modeler': [
           './src/main.js'
-      ],
-      'b9-modeler-sample': [
-          './src/sample/index.js'
       ]
   },
   output: {
