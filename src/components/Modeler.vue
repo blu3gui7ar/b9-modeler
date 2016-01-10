@@ -2,36 +2,40 @@
     <div>
         <tree-graph v-if="showGraph" v-ref:graph :model="model" :width='500' :height='700'></tree-graph>
         <div>{{showContent}}</div>
-        <plain-editor v-if="showPlain" :node="editing"></plain-editor>
+        <plain-editor v-if="showPlain" :node="editingNode"></plain-editor>
     </div>
 </template>
 
 <script>
 import TreeGraph from './TreeGraph.vue'
 import PlainEditor from './PlainEditor.vue'
-import { model } from './states'
-import store from '../store'
-const { initModeler, foldNode } = store.actions
+import { metadata, model, editingNode } from './states'
+import { actions } from '../store'
+const { foldNode } = actions('foldNode')
 
 export default {
     computed: {
         model,
+        metadata,
+        editingNode,
         showContent () {
-            return JSON.stringify(store.state.metadata.fromGraphModel(this.model, 'model'))
-        },
-        editing () {
-            return store.state.editingNode
+            return JSON.stringify(this.metadata.fromGraphModel(this.model, 'model'))
         },
         showGraph () {
-            return this.model.name
+            return this.model.name !== undefined && this.model.name !== null
         },
         showPlain () {
-            return store.state.editingNode !== null && store.state.editingNode.name
+            return this.editingNode !== null &&
+                this.editingNode.name !== undefined && this.editingNode.name !== null
+        }
+    },
+    methods: {
+        onFold () {
+            foldNode(this.model)
         }
     },
     ready () {
-        initModeler()
-        foldNode(this.model)
+        this.$on('fold', this.onFold)
     },
     components: {
         'tree-graph': TreeGraph,

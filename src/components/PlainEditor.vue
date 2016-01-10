@@ -9,8 +9,8 @@
 
 <script>
 import metacomp from './metacomp'
-import store from '../store'
-const { modifyPlain, setPlain } = store.actions
+import { actions } from '../store'
+const { modifyPlain, setPlain } = actions('modifyPlain', 'setPlain')
 
 export default {
     mixins: [metacomp],

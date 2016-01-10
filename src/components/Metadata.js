@@ -55,13 +55,3 @@ export default class Metadata {
         return {[name]: handler.toData(graphModel)}
     }
 }
-
-const basicMeta = new Metadata({model: {type: 'object', attrs: []}})
-const basicModel = basicMeta.toGraphModel({}, 'model', 'model', true)
-export const basic = {
-    metadata: basicMeta,
-    model: basicModel,
-    activeNode: basicModel,
-    editingNode: basicModel,
-    relocateSource: basicModel
-}

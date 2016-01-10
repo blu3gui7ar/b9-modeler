@@ -1,11 +1,19 @@
-import store from '../store'
+import { getState } from '../store'
 
 export function metadata () {
-    return store.state.metadata
+    return getState().metadata
 }
 export function model () {
-    return store.state.model
+    return getState().model
 }
 export function activeNode () {
-    return store.state.activeNode
+    return getState().activeNode
+}
+
+export function editingNode () {
+    return getState().editingNode
+}
+
+export function relocateSource () {
+    return getState().relocateSource
 }

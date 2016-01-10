@@ -1,10 +1,8 @@
-import store from '../store'
+import { metadata } from './states'
 
 export default {
     computed: {
-        metadata () {
-            return store.state.metadata
-        }
+        metadata
     },
     methods: {
         component (metaname) {

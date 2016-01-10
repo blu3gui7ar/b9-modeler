@@ -10,11 +10,19 @@ import {
 } from './mutation-types'
 import _ from 'lodash'
 import Vue from 'vue'
-import Metadata, { basic } from '../components/Metadata'
+import Metadata from '../components/Metadata'
 
-export const modelerInitialState = basic
+const basicMeta = new Metadata({model: {type: 'object', attrs: []}})
+const basicModel = basicMeta.toGraphModel({}, 'model', 'model', true)
+export const initState = {
+    metadata: basicMeta,
+    model: basicModel,
+    activeNode: basicModel,
+    editingNode: basicModel,
+    relocateSource: basicModel
+}
 
-export const modelerMutations = {
+export const mutations = {
     [SET_DATA] (state, metaDesc, data) {
         const metadata = new Metadata(metaDesc)
         const model = metadata.toGraphModel(data.model, 'model', 'model', true)
