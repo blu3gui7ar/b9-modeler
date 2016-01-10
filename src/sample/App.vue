@@ -6,6 +6,7 @@
 
 <script>
 import store from './store'
+const { b9m_init } = store.actions
 import { Modeler as B9M } from '../main'
 
 export default {
@@ -48,7 +49,7 @@ export default {
                 ]
             }
         }
-        store.actions.b9m_init(metaDesc, data)
+        b9m_init(metaDesc, data)
         this.$broadcast('fold')
     }
 }
