@@ -12,13 +12,16 @@
 </style>
 
 <script>
-import store from '../store'
+import { relocateSource } from './states'
 import d3 from 'd3'
 const diagonal = d3.svg.diagonal().projection(d => [d.y, d.x])
 
 export default {
     props: {
         link: Object
+    },
+    computed: {
+        relocateSource
     },
     methods: {
         relocate (from, to) {
@@ -36,7 +39,7 @@ export default {
             css: false,
             enter (el, done) {
                 const d3e = d3.select(el)
-                d3e.attr('d', diagonal({source: store.state.relocateSource, target: store.state.relocateSource}))
+                d3e.attr('d', diagonal({source: this.relocateSource, target: this.relocateSource}))
                 d3e.transition()
                     .duration(500)
                     .attr('d', diagonal(this.link))
@@ -46,7 +49,7 @@ export default {
                 const d3e = d3.select(el)
                 d3e.transition()
                     .duration(500)
-                    .attr('d', diagonal({source: store.state.relocateSource, target: store.state.relocateSource}))
+                    .attr('d', diagonal({source: this.relocateSource, target: this.relocateSource}))
                     .each('end', done)
 
             }

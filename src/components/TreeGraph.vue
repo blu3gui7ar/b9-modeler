@@ -16,8 +16,7 @@ const layout = d3.layout.tree()
 
 import TreeGraphNode from './TreeGraphNode'
 import TreeGraphLink from './TreeGraphLink'
-import store from '../store'
-// const { addNode } = store.actions
+import { model, editingNode, activeNode } from './states'
 
 export default {
     data () {
@@ -30,11 +29,13 @@ export default {
         }
     },
     props: {
-        model: Object,
         width: Number,
         height: Number
     },
     computed: {
+        model,
+        activeNode,
+        editingNode,
         nodes () {
             const nodes = layout.nodes(this.model).reverse()
             this.linkMap = _.reduce(layout.links(nodes), (newMap, link) => {
@@ -54,10 +55,10 @@ export default {
     },
     methods: {
         isActive (node) {
-            return store.state.activeNode === node
+            return this.activeNode === node
         },
         isEditing (node) {
-            return store.state.editingNode === node
+            return this.editingNode === node
         }
     },
     created () {

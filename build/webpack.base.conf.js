@@ -1,16 +1,22 @@
 var path = require('path')
+var webpack = require('webpack')
 
 module.exports = {
   entry: {
-      'b9-modeler': [
-          './src/main.js'
-      ]
+      'b9-modeler': './src/main.js',
+      'vendor': ['vue', 'vuex', 'd3', 'lodash']
   },
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/',
     filename: '[name].js'
   },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: Infinity
+    })
+  ],
   resolve: {
     extensions: ['', '.js', '.vue'],
     alias: {

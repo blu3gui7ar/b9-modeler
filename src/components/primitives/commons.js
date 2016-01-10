@@ -1,4 +1,4 @@
-import store from '../../store'
+import { metadata } from '../states'
 
 export default {
     props: {
@@ -15,8 +15,9 @@ export default {
         metaname: String
     },
     computed: {
+        metadata,
         nodemeta () {
-            return store.state.metadata.meta(this.metaname)
+            return this.metadata.meta(this.metaname)
         }
     }
 }

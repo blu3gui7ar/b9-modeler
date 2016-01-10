@@ -40,11 +40,15 @@ import TreeGraphRemoveButton from './TreeGraphRemoveButton.vue'
 import TreeGraphEditButton from './TreeGraphEditButton.vue'
 import TreeGraphCreateButton from './TreeGraphCreateButton.vue'
 
-import store from '../store'
-const { activateNode, addNode, deleteNode, editNode, foldNode } = store.actions
+import { metadata, relocateSource } from './states'
+import { actions } from '../store'
+const { activateNode, addNode, deleteNode, editNode, foldNode } =
+    actions('activateNode', 'addNode', 'deleteNode', 'editNode', 'foldNode')
 
 export default {
     computed: {
+        metadata,
+        relocateSource,
         transform () {
             return 'translate(' + this.node.y + ',' + this.node.x + ')'
         },
@@ -62,16 +66,14 @@ export default {
         },
         buttons () {
             const metaname = this.node.metaname
-            const metadata = store.state.metadata
-            const handler = metadata.handler(metaname)
-            return handler.childGen(this.node.children)
+            const handler = this.metadata.handler(metaname)
+            return handler.childGen(this.node.children || this.node._children)
         }
     },
     props: {
         node: Object,
         active: Boolean,
-        editing: Boolean,
-        metadata: Object
+        editing: Boolean
     },
     methods: {
         canAdd (child) {
@@ -128,7 +130,7 @@ export default {
             css: false,
             enter (el, done) {
                 const d3e = d3.select(el)
-                const source = store.state.relocateSource
+                const source = this.relocateSource
                 if (source) {
                     d3e.attr('transform', 'translate(' + source.y + ',' + source.x + ')')
                     d3e.transition()
@@ -142,7 +144,7 @@ export default {
             },
             leave (el, done) {
                 const d3e = d3.select(el)
-                const source = store.state.relocateSource
+                const source = this.relocateSource
                 if (source && this.node.parent) { // root node do not need transition
                     d3e.transition()
                         .duration(500)

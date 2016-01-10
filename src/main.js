@@ -1,9 +1,3 @@
-import Vue from 'vue'
-import App from './App'
-
-Vue.config.debug = true
-/* eslint-disable no-new */
-new Vue({
-    el: 'body',
-    components: { App }
-})
+export { config, setStore } from './store'
+import Modeler from './components/Modeler'
+export { Modeler }
