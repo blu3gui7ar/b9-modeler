@@ -67,7 +67,7 @@ export default {
         buttons () {
             const metaname = this.node.metaname
             const handler = this.metadata.handler(metaname)
-            return handler.childGen(this.node.children)
+            return handler.childGen(this.node.children || this.node._children)
         }
     },
     props: {
