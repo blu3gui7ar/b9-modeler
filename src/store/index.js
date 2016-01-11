@@ -8,9 +8,10 @@ const conf = {
     store: {state: {}}
 }
 
-export function config (resolve, prefix) {
+export function config (resolve, prefix, cssPrefix) {
     conf.resolve = resolve || conf.resolve
     conf.prefix = prefix || conf.prefix
+    cssPrefix = cssPrefix || conf.prefix.replace(/_/g, '-')
     const mutations = _(rawMutations).mapValues(mutation => function (state, ...args) {
         return mutation(conf.resolve(state), ...args)
     })
@@ -29,7 +30,7 @@ export function config (resolve, prefix) {
     .value()
 
     return {
-        state: { ...initState, cssPrefix: conf.prefix.replace(/_/g, '-') },
+        state: { ...initState, cssPrefix: cssPrefix },
         mutations: mutations,
         actions: actions
     }
