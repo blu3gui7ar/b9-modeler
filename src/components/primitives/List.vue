@@ -67,9 +67,11 @@ export class ListHandler extends DefaultHandler {
     toData (graphModel) {
         let d = []
         const children = graphModel._children || graphModel.children
-        for (const childModel of children) {
-            const subData = this.metadata.handler(childModel.metaname).toData(childModel)
-            d.push(subData)
+        if (children) {
+            for (const childModel of children) {
+                const subData = this.metadata.handler(childModel.metaname).toData(childModel)
+                d.push(subData)
+            }
         }
 
         if (graphModel.plain !== undefined) {
