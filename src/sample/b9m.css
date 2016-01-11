@@ -1,0 +1,70 @@
+.b9m-graph-node {
+  position: relative;
+  display: inline-block;
+  font: 10px sans-serif;
+}
+.b9m-graph-node > circle {
+  fill: white;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+.b9m-graph-node-active * {
+  display: inline-block;
+}
+.b9m-graph-node-active > circle {
+  stroke: red;
+}
+.b9m-graph-node-editing > circle {
+  fill: red;
+}
+.b9m-graph-node-folded > circle {
+  fill: lightsteelblue;
+}
+.b9m-graph-node > text {
+  fill-opacity: 1;
+}
+
+.b9m-graph-link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+.b9m-graph-btn {
+  opacity: 0;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  cursor: pointer;
+}
+.b9m-graph-btn-disabled * {
+  opacity: 0.3;
+}
+.b9m-graph-node-active:hover > .b9m-graph-btn {
+  opacity: 1;
+}
+.b9m-graph-btn-text {
+}
+.b9m-graph-btn-add {
+  fill: #57D37E;
+}
+.b9m-graph-btn-add > circle {
+  fill: white;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+.b9m-graph-btn-add > text {
+  font-weight: bold;
+  font-family: Cursive;
+  font-size: 16px;
+  text-anchor: middle;
+}
+.b9m-graph-btn-edit {
+  fill: #79AFE9;
+}
+.b9m-graph-btn-remove {
+  fill: #E97979;
+}
+.b9m-graph-btn-remove > circle {
+  fill: white;
+}

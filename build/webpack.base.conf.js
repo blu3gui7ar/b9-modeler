@@ -18,7 +18,7 @@ module.exports = {
     })
   ],
   resolve: {
-    extensions: ['', '.js', '.vue'],
+    extensions: ['', '.js', '.vue', '.css'],
     alias: {
       'src': path.resolve(__dirname, '../src')
     }
@@ -37,6 +37,10 @@ module.exports = {
       {
         test: /\.json$/,
         loader: 'json'
+      },
+      {
+        test: /\.css$/,
+        loader: 'style!css'
       },
       {
         test: /\.(png|jpg|gif|svg)$/,

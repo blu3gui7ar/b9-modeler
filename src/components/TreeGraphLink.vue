@@ -1,18 +1,10 @@
 <template>
-    <path class="link" transition="relocate">
+    <path :class="linkClass" transition="relocate">
     </path>
 </template>
 
-<style scoped>
-.link {
-  fill: none;
-  stroke: #ccc;
-  stroke-width: 1.5px;
-}
-</style>
-
 <script>
-import { relocateSource } from './states'
+import { relocateSource, cssPrefix } from './states'
 import d3 from 'd3'
 const diagonal = d3.svg.diagonal().projection(d => [d.y, d.x])
 
@@ -21,7 +13,13 @@ export default {
         link: Object
     },
     computed: {
-        relocateSource
+        relocateSource,
+        cssPrefix,
+        linkClass () {
+            return {
+                [this.cssPrefix + 'graph-link']: true
+            }
+        }
     },
     methods: {
         relocate (from, to) {

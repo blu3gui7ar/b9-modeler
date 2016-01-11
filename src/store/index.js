@@ -29,7 +29,7 @@ export function config (resolve, prefix) {
     .value()
 
     return {
-        state: initState,
+        state: { ...initState, cssPrefix: conf.prefix.replace(/_/g, '-') },
         mutations: mutations,
         actions: actions
     }

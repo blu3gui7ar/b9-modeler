@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import './b9m'
 import store from './store'
 const { b9m_init } = store.actions
 import { Modeler as B9M } from '../main'
@@ -54,9 +55,3 @@ export default {
     }
 }
 </script>
-
-<style>
-body {
-  font-family: Helvetica, sans-serif;
-}
-</style>

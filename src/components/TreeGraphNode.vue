@@ -1,38 +1,19 @@
 <template>
-    <g class="node" :class="{'node-active':active}" @mouseover="onMouseOver" transition="relocate">
-        <circle r=6 :style="{fill:cirleFill}" @click="onCircleClick"></circle>
-        <text x=15 y=3 text-anchor="start" style="{fill-opacity: 1}" @click="onTextClick">
+    <g :class="nodeClass" @mouseover="onMouseOver" transition="relocate">
+        <circle r=6 :class="circleClass" @click="onCircleClick"></circle>
+        <text x=15 y=3 text-anchor="start" @click="onTextClick">
             {{node.name}}
         </text>
-        <tree-graph-remove-button :x='10' :y='-42' :show='canRemove' @click="onRemove">
+        <tree-graph-remove-button :x='10' :y='-42' :valid='canRemove' @click="onRemove">
         </tree-graph-remove-button>
-        <tree-graph-edit-button :x='10' :y='-12' :show='active' @click="onEdit">
+        <tree-graph-edit-button :x='10' :y='-12' @click="onEdit">
         </tree-graph-edit-button>
-        <tree-graph-create-button v-for="(btn, enabled) in buttons" :show='active' :valid='enabled' :name="btn"
+        <tree-graph-create-button v-for="(btn, enabled) in buttons" :valid='enabled' :name="btn"
                 :x='10' :y='18 + 30 * $index'
                 @click="onCreate(btn, enabled)">
         </tree-graph-create-button>
     </g>
 </template>
-
-<style>
-.node {
-  position: relative;
-  display: inline-block;
-  font: 10px sans-serif;
-}
-.node circle {
-  fill: white;
-  stroke: steelblue;
-  stroke-width: 1.5px;
-}
-.node-active > circle {
-    stroke: red
-}
-.node-active * {
-  display: inline-block;
-}
-</style>
 
 <script>
 import d3 from 'd3'
@@ -40,7 +21,7 @@ import TreeGraphRemoveButton from './TreeGraphRemoveButton.vue'
 import TreeGraphEditButton from './TreeGraphEditButton.vue'
 import TreeGraphCreateButton from './TreeGraphCreateButton.vue'
 
-import { metadata, relocateSource } from './states'
+import { metadata, relocateSource, cssPrefix } from './states'
 import { actions } from '../store'
 const { activateNode, addNode, deleteNode, editNode, foldNode } =
     actions('activateNode', 'addNode', 'deleteNode', 'editNode', 'foldNode')
@@ -49,24 +30,23 @@ export default {
     computed: {
         metadata,
         relocateSource,
+        cssPrefix,
         transform () {
             return 'translate(' + this.node.y + ',' + this.node.x + ')'
         },
         canRemove () {
             return this.active && (this.node.parent !== undefined)
         },
-        cirleFill () {
-            if (this.editing) {
-                return 'red'
-            } else if (this.node._children !== null) {
-                return 'lightsteelblue'
-            } else {
-                return 'white'
+        nodeClass () {
+            return {
+                [this.cssPrefix + 'graph-node']: true,
+                [this.cssPrefix + 'graph-node-active']: this.active,
+                [this.cssPrefix + 'graph-node-editing']: this.editing,
+                [this.cssPrefix + 'graph-node-folded']: (this.node._children !== null)
             }
         },
         buttons () {
-            const metaname = this.node.metaname
-            const handler = this.metadata.handler(metaname)
+            const handler = this.metadata.handler(this.node.metaname)
             return handler.childGen(this.node.children || this.node._children)
         }
     },
@@ -83,7 +63,9 @@ export default {
             foldNode(this.node)
         },
         onRemove (e) {
-            deleteNode(this.node)
+            if (this.canRemove) {
+                deleteNode(this.node)
+            }
         },
         onEdit (e) {
             editNode(this.node)

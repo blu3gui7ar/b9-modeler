@@ -17,3 +17,7 @@ export function editingNode () {
 export function relocateSource () {
     return getState().relocateSource
 }
+
+export function cssPrefix () {
+    return getState().cssPrefix
+}

@@ -1,27 +1,12 @@
 <template>
-    <g :transform="transform" class="function-btn edit" :style='style'>
+    <g :transform="transform" :class="btnClass">
         <path :d="icon"></path>
         <circle opacity=1e-6 r=12 cx=11 cy=12></circle>
     </g>
 </template>
 
-<style scoped>
-.function-btn{
-  opacity: 0;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-  display: none;
-}
-.function-btn.edit{
-  fill: #79AFE9;
-}
-g:hover > .node-active > .function-btn{
-  opacity: 1;
-}
-</style>
-
 <script>
+import { cssPrefix } from './states'
 export default {
     data () {
         return {
@@ -30,13 +15,14 @@ export default {
     },
     props: {
         x: Number,
-        y: Number,
-        show: Boolean
+        y: Number
     },
     computed: {
-        style () {
+        cssPrefix,
+        btnClass () {
             return {
-                display: this.show ? 'inline-block' : 'none'
+                [this.cssPrefix + 'graph-btn']: true,
+                [this.cssPrefix + 'graph-btn-edit']: true
             }
         },
         transform () {
