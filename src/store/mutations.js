@@ -6,9 +6,12 @@ import {
     FOLD_NODE,
     DELETE_NODE,
     MODIFY_PLAIN,
-    SET_PLAIN
+    SET_PLAIN,
+    RELOCATE_NODE,
+    INIT_LAYOUT
 } from './mutation-types'
 import _ from 'lodash'
+import d3 from 'd3'
 import Vue from 'vue'
 import Metadata from '../components/Metadata'
 
@@ -17,6 +20,9 @@ const basicModel = basicMeta.toGraphModel({}, 'model', 'model', true)
 export const initState = {
     metadata: basicMeta,
     model: basicModel,
+    layout: d3.layout.tree(),
+    nodes: [],
+    linkMap: {},
     activeNode: basicModel,
     editingNode: basicModel,
     relocateSource: basicModel
@@ -74,5 +80,17 @@ export const mutations = {
     },
     [SET_PLAIN] (state, node, value) {
         node.plain = value
+    },
+    [RELOCATE_NODE] (state) {
+        state.nodes = state.layout.nodes(state.model).reverse()
+        const links = state.layout.links(state.nodes)
+        state.linkMap = _.reduce(links, (newMap, link) => {
+            const l = state.linkMap[link.target.id]
+            newMap[link.target.id] = (l !== undefined) ? l : link
+            return newMap
+        }, {})
+    },
+    [INIT_LAYOUT] (state, height, width) {
+        state.layout.size([height, width])
     }
 }

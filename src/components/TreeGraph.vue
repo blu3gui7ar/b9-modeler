@@ -10,18 +10,15 @@
 </template>
 
 <script>
-import _ from 'lodash'
-import d3 from 'd3'
-const layout = d3.layout.tree()
-
 import TreeGraphNode from './TreeGraphNode'
 import TreeGraphLink from './TreeGraphLink'
-import { model, editingNode, activeNode } from './states'
+import { nodes, links, editingNode, activeNode } from './states'
+import { actions } from '../store'
+const { initLayout } = actions('initLayout')
 
 export default {
     data () {
         return {
-            linkMap: {},
             left: 50,
             right: 100,
             top: 10,
@@ -33,22 +30,10 @@ export default {
         height: Number
     },
     computed: {
-        model,
+        nodes,
+        links,
         activeNode,
         editingNode,
-        nodes () {
-            const nodes = layout.nodes(this.model).reverse()
-            this.linkMap = _.reduce(layout.links(nodes), (newMap, link) => {
-                const l = this.linkMap[link.target.id]
-                newMap[link.target.id] = (l !== undefined) ? l : link
-                return newMap
-            }, {})
-
-            return nodes
-        },
-        links () {
-            return _.toArray(this.linkMap)
-        },
         transform () {
             return 'translate(' + this.left + ',' + this.top + ')'
         }
@@ -62,7 +47,7 @@ export default {
         }
     },
     created () {
-        layout.size([this.height - this.top - this.bottom, this.width - this.left - this.right])
+        initLayout(this.height - this.top - this.bottom, this.width - this.left - this.right)
     },
     components: {
         'tree-graph-node': TreeGraphNode,

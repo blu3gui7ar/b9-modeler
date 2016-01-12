@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { getState } from '../store'
 
 export function metadata () {
@@ -5,6 +6,12 @@ export function metadata () {
 }
 export function model () {
     return getState().model
+}
+export function nodes () {
+    return getState().nodes
+}
+export function links () {
+    return _.toArray(getState().linkMap)
 }
 export function activeNode () {
     return getState().activeNode
