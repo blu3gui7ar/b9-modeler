@@ -1,6 +1,9 @@
 import _ from 'lodash'
 import { getState } from '../store'
 
+export function rootMeta() {
+    return getState().rootMeta
+}
 export function metadata () {
     return getState().metadata
 }

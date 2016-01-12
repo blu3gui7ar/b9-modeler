@@ -15,8 +15,8 @@ export const initLayout = ({ dispatch }, height, width) => {
     dispatch(INIT_LAYOUT, height, width)
 }
 
-export const init = ({ dispatch }, metadata, data) => {
-    dispatch(SET_DATA, metadata, data)
+export const init = ({ dispatch }, metadata, data, root = 'ROOT', rootMeta = 'model', fold = true) => {
+    dispatch(SET_DATA, metadata, data, root, rootMeta, fold)
     dispatch(RELOCATE_NODE)
 }
 

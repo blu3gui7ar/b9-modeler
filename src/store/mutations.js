@@ -20,6 +20,7 @@ const basicModel = basicMeta.toGraphModel({}, 'model', 'model', true)
 export const initState = {
     metadata: basicMeta,
     model: basicModel,
+    rootMeta: 'model',
     layout: d3.layout.tree(),
     nodes: [],
     linkMap: {},
@@ -29,14 +30,15 @@ export const initState = {
 }
 
 export const mutations = {
-    [SET_DATA] (state, metaDesc, data) {
+    [SET_DATA] (state, metaDesc, data, root, rootMeta, fold) {
         const metadata = new Metadata(metaDesc)
-        const model = metadata.toGraphModel(data.model, 'model', 'model', true)
-        state.metadata = metadata
-        state.activeNode = model
+        const model = metadata.toGraphModel(data, root, rootMeta, fold)
         state.editingNode = model
+        state.activeNode = model
         state.relocateSource = model
+        state.metadata = metadata
         state.model = model
+        state.rootMeta = rootMeta
     },
     [ADD_NODE] (state, node, child) {
         const metadata = state.metadata

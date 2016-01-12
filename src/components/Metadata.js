@@ -49,9 +49,8 @@ export default class Metadata {
         }
         return model
     }
-    fromGraphModel (graphModel, name, metaname) {
-        metaname = metaname || name
+    fromGraphModel (graphModel, metaname) {
         const handler = this.handler(metaname)
-        return {[name]: handler.toData(graphModel)}
+        return handler.toData(graphModel)
     }
 }

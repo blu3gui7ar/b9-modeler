@@ -56,11 +56,12 @@ export default {
         editing: Boolean
     },
     methods: {
-        canAdd (child) {
-            return true
-        },
         onCircleClick (e) {
-            foldNode(this.node)
+            if (e.altKey) {
+                console.log('alt click')
+            } else {
+                foldNode(this.node)
+            }
         },
         onRemove (e) {
             if (this.canRemove) {

@@ -20,7 +20,7 @@ export default {
     data () {
         return {
             left: 50,
-            right: 100,
+            right: 200,
             top: 10,
             bottom: 10
         }
