@@ -4,7 +4,10 @@ import { config, setStore } from '../main'
 
 Vue.use(Vuex)
 // const debug = process.env.NODE_ENV !== 'production'
-const {state: b9state, mutations: b9mutations, actions: b9actions} = config(state => state.modeler, 'b9m_')
+const {state: b9state, mutations: b9mutations, actions: b9actions} = config({
+    resolve: state => state.modeler,
+    prefix: 'b9m_'
+})
 
 const store = new Vuex.Store({
     // strict: debug, //cause call stack exceeded
