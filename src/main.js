@@ -1,5 +1,5 @@
-export { config, setStore } from './store'
+import Config from './store'
 import Modeler from './components/Modeler'
 import TreeGraph from './components/TreeGraph'
 import PlainEditor from './components/PlainEditor'
-export { Modeler, TreeGraph, PlainEditor }
+export { Config, Modeler, TreeGraph, PlainEditor }

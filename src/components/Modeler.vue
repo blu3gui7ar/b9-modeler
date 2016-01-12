@@ -1,8 +1,8 @@
 <template>
     <div>
-        <tree-graph v-if="showGraph" v-ref:graph :model="model" :width='500' :height='700'></tree-graph>
+        <tree-graph v-if="showGraph" :config='config' :model="model" :width='500' :height='700'></tree-graph>
         <div>{{showContent}}</div>
-        <plain-editor v-if="showPlain" :node="editingNode"></plain-editor>
+        <plain-editor v-if="showPlain" :config='config' :node="editingNode"></plain-editor>
     </div>
 </template>
 
@@ -10,10 +10,12 @@
 import TreeGraph from './TreeGraph.vue'
 import PlainEditor from './PlainEditor.vue'
 import { metadata, model, rootMeta, editingNode } from './states'
-import { actions } from '../store'
-const { foldNode } = actions('foldNode')
+import config from './config'
+import actions from './actions'
+const { foldNode } = actions
 
 export default {
+    mixins: [config],
     computed: {
         model,
         metadata,
@@ -32,7 +34,7 @@ export default {
     },
     methods: {
         onFold () {
-            foldNode(this.model)
+            foldNode(this.config, this.model)
         }
     },
     ready () {

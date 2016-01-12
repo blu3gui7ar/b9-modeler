@@ -4,11 +4,13 @@
 </template>
 
 <script>
+import config from './config'
 import { relocateSource, cssPrefix } from './states'
 import d3 from 'd3'
 const diagonal = d3.svg.diagonal().projection(d => [d.y, d.x])
 
 export default {
+    mixins: [config],
     props: {
         link: Object
     },
@@ -45,9 +47,10 @@ export default {
             },
             leave (el, done) {
                 const d3e = d3.select(el)
+                const source = this.config.getState().relocateSource
                 d3e.transition()
                     .duration(500)
-                    .attr('d', diagonal({source: this.relocateSource, target: this.relocateSource}))
+                    .attr('d', diagonal({source: source, target: source}))
                     .each('end', done)
 
             }

@@ -4,13 +4,13 @@
         <text x=15 y=3 text-anchor="start" @click="onTextClick">
             {{node.name}}
         </text>
-        <tree-graph-remove-button :x='10' :y='-42' :valid='canRemove' @click="onRemove">
+        <tree-graph-remove-button :x='10' :y='-42' :valid='canRemove' @click="onRemove" :config='config'>
         </tree-graph-remove-button>
-        <tree-graph-edit-button :x='10' :y='-12' @click="onEdit">
+        <tree-graph-edit-button :x='10' :y='-12' @click="onEdit" :config='config'>
         </tree-graph-edit-button>
         <tree-graph-create-button v-for="(btn, enabled) in buttons" :valid='enabled' :name="btn"
                 :x='10' :y='18 + 30 * $index'
-                @click="onCreate(btn, enabled)">
+                @click="onCreate(btn, enabled)" :config='config'>
         </tree-graph-create-button>
     </g>
 </template>
@@ -22,11 +22,12 @@ import TreeGraphEditButton from './TreeGraphEditButton.vue'
 import TreeGraphCreateButton from './TreeGraphCreateButton.vue'
 
 import { metadata, relocateSource, cssPrefix } from './states'
-import { actions } from '../store'
-const { activateNode, addNode, deleteNode, editNode, foldNode } =
-    actions('activateNode', 'addNode', 'deleteNode', 'editNode', 'foldNode')
+import config from './config'
+import actions from './actions'
+const { activateNode, addNode, deleteNode, editNode, foldNode } = actions
 
 export default {
+    mixins: [config],
     computed: {
         metadata,
         relocateSource,
@@ -51,6 +52,7 @@ export default {
         }
     },
     props: {
+        config: Object,
         node: Object,
         active: Boolean,
         editing: Boolean
@@ -60,24 +62,24 @@ export default {
             if (e.altKey) {
                 console.log('alt click')
             } else {
-                foldNode(this.node)
+                foldNode(this.config, this.node)
             }
         },
         onRemove (e) {
             if (this.canRemove) {
-                deleteNode(this.node)
+                deleteNode(this.config, this.node)
             }
         },
         onEdit (e) {
-            editNode(this.node)
+            editNode(this.config, this.node)
         },
         onCreate (child, valid) {
             if (valid) {
-                addNode(this.node, child)
+                addNode(this.config, this.node, child)
             }
         },
         onMouseOver () {
-            activateNode(this.node)
+            activateNode(this.config, this.node)
         },
         onTextClick () {
             /*
@@ -127,7 +129,8 @@ export default {
             },
             leave (el, done) {
                 const d3e = d3.select(el)
-                const source = this.relocateSource
+                // const source = this.relocateSource
+                const source = this.config.getState().relocateSource
                 if (source && this.node.parent) { // root node do not need transition
                     d3e.transition()
                         .duration(500)

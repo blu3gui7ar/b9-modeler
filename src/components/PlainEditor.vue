@@ -3,26 +3,28 @@
                :nodename='node.name'
                :noderef='""'
                :metaname='node.metaname'
-               :nodedata='node.plain'>
+               :nodedata='node.plain'
+               :config='config'>
     </component>
 </template>
 
 <script>
+import config from './config'
 import metacomp from './metacomp'
-import { actions } from '../store'
-const { modifyPlain, setPlain } = actions('modifyPlain', 'setPlain')
+import actions from './actions'
+const { modifyPlain, setPlain } = actions
 
 export default {
-    mixins: [metacomp],
+    mixins: [metacomp, config],
     props: {
         node: Object
     },
     methods: {
         onUpdate (child, modify) {
-            modifyPlain(this.node.plain, modify)
+            modifyPlain(this.config, this.node.plain, modify)
         },
         onSet (child, value) {
-            setPlain(this.node, value)
+            setPlain(this.config, this.node, value)
         }
     }
 }

@@ -6,7 +6,8 @@
                            :nodename='key'
                            :noderef='key'
                            :metaname='nodemeta.value'
-                           :nodedata='value'>
+                           :nodedata='value'
+                           :config='config'>
                 </component>
         </div>
     </div>

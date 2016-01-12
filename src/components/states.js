@@ -1,33 +1,29 @@
 import _ from 'lodash'
-import { getState } from '../store'
 
-export function rootMeta() {
-    return getState().rootMeta
+export function rootMeta () {
+    return this.config.getState().rootMeta
 }
 export function metadata () {
-    return getState().metadata
+    return this.config.getState().metadata
 }
 export function model () {
-    return getState().model
+    return this.config.getState().model
 }
 export function nodes () {
-    return getState().nodes
+    return this.config.getState().nodes
 }
 export function links () {
-    return _.toArray(getState().linkMap)
+    return _.toArray(this.config.getState().linkMap)
 }
 export function activeNode () {
-    return getState().activeNode
+    return this.config.getState().activeNode
 }
-
 export function editingNode () {
-    return getState().editingNode
+    return this.config.getState().editingNode
 }
-
 export function relocateSource () {
-    return getState().relocateSource
+    return this.config.getState().relocateSource
 }
-
 export function cssPrefix () {
-    return getState().cssPrefix
+    return this.config.getState().cssPrefix
 }

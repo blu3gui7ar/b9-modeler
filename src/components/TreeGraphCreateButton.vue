@@ -7,8 +7,10 @@
 </template>
 
 <script>
+import config from './config'
 import { cssPrefix } from './states'
 export default {
+    mixins: [config],
     props: {
         name: String,
         x: Number,

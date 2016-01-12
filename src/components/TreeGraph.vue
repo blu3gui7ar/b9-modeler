@@ -1,8 +1,8 @@
 <template>
     <svg :width='width' :height='height'>
         <g :transform="transform">
-            <tree-graph-link v-for="link in links" :link="link"></tree-graph-link >
-            <tree-graph-node v-ref:gns v-for="node in nodes"
+            <tree-graph-link v-for="link in links" :link="link" :config='config'></tree-graph-link >
+            <tree-graph-node v-ref:gns v-for="node in nodes" :config='config'
                 :node="node" :active="isActive(node)" :editing="isEditing(node)">
             </tree-graph-node>
         </g>
@@ -13,10 +13,12 @@
 import TreeGraphNode from './TreeGraphNode'
 import TreeGraphLink from './TreeGraphLink'
 import { nodes, links, editingNode, activeNode } from './states'
-import { actions } from '../store'
-const { initLayout } = actions('initLayout')
+import config from './config'
+import actions from './actions'
+const { initLayout } = actions
 
 export default {
+    mixins: [config],
     data () {
         return {
             left: 50,
@@ -47,7 +49,7 @@ export default {
         }
     },
     created () {
-        initLayout(this.height - this.top - this.bottom, this.width - this.left - this.right)
+        initLayout(this.config, this.height - this.top - this.bottom, this.width - this.left - this.right)
     },
     components: {
         'tree-graph-node': TreeGraphNode,

@@ -12,6 +12,7 @@ export default {
                 return typeof value === 'number' || typeof value === 'string'
             }
         },
+        config: Object,
         metaname: String
     },
     computed: {

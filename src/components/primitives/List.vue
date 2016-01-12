@@ -5,7 +5,7 @@
                    :noderef='idx'
                    :metaname='nodemeta.value'
                    :nodedata='value'
-        >
+                   :config='config'>
         </component>
     </div>
 </template>
