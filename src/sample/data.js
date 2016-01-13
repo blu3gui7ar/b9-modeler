@@ -14,8 +14,7 @@ export const metadata = {
     attribute: {type: 'ref', target: 'attribute:'},
     styles: {type: 'list', flatten: false, value: 'style'},
     style: {type: 'ref', target: 'style:'},
-    images: {type: 'list', flatten: false, value: 'image'},
-    image: {type: 'ref', target: 'image:'},
+    images: {type: 'textlist', limit: 5},
     subcats: {type: 'list', value: 'category'}
 }
 

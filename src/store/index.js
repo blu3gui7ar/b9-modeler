@@ -62,4 +62,8 @@ export default class Config {
             actions: actions
         }
     }
+    getData () {
+        const state = this.getState()
+        return JSON.stringify(state.metadata.fromGraphModel(state.model, state.rootMeta))
+    }
 }

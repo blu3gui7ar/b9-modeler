@@ -9,7 +9,9 @@ import './b9m'
 import * as init from './data'
 import store, { b9mConf } from './store'
 const { b9m_init } = store.actions
-import { Modeler as B9M } from '../main'
+import { registry, Modeler as B9M } from '../main'
+import TextList from './TextList'
+registry.register('textlist', TextList)
 
 export default {
     data () {

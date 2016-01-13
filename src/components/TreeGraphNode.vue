@@ -142,6 +142,7 @@ export default {
             },
             leave (el, done) {
                 const d3e = d3.select(el)
+                // TODO: bug of vue? this inside relocateSource is unbound
                 // const source = this.relocateSource
                 const source = this.config.getState().relocateSource
                 if (source && this.node.parent) { // root node do not need transition
