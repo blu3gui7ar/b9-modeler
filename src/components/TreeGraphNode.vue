@@ -4,6 +4,8 @@
         <text x=15 y=3 text-anchor="start" @click="onTextClick">
             {{node.name}}
         </text>
+        <tree-graph-parent-button :x='-15' :y='-41' v-if='canGoParent' @click="onGoParent" :config='config'>
+        </tree-graph-parent-button>
         <tree-graph-remove-button :x='10' :y='-42' :valid='canRemove' @click="onRemove" :config='config'>
         </tree-graph-remove-button>
         <tree-graph-edit-button :x='10' :y='-12' @click="onEdit" :config='config'>
@@ -17,23 +19,28 @@
 
 <script>
 import d3 from 'd3'
-import TreeGraphRemoveButton from './TreeGraphRemoveButton.vue'
-import TreeGraphEditButton from './TreeGraphEditButton.vue'
-import TreeGraphCreateButton from './TreeGraphCreateButton.vue'
+import TreeGraphRemoveButton from './TreeGraphRemoveButton'
+import TreeGraphEditButton from './TreeGraphEditButton'
+import TreeGraphCreateButton from './TreeGraphCreateButton'
+import TreeGraphParentButton from './TreeGraphParentButton'
 
-import { metadata, relocateSource, cssPrefix } from './states'
+import { metadata, displayRoot, relocateSource, cssPrefix } from './states'
 import config from './config'
 import actions from './actions'
-const { activateNode, addNode, deleteNode, editNode, foldNode } = actions
+const { activateNode, addNode, deleteNode, editNode, foldNode, navigateNode } = actions
 
 export default {
     mixins: [config],
     computed: {
         metadata,
+        displayRoot,
         relocateSource,
         cssPrefix,
         transform () {
             return 'translate(' + this.node.y + ',' + this.node.x + ')'
+        },
+        canGoParent () {
+            return this.displayRoot === this.node && this.node.parent !== undefined && this.node.parent !== null
         },
         canRemove () {
             return this.active && (this.node.parent !== undefined)
@@ -58,9 +65,14 @@ export default {
         editing: Boolean
     },
     methods: {
+        onGoParent (e) {
+            if (this.canGoParent) {
+                navigateNode(this.config, this.node.parent)
+            }
+        },
         onCircleClick (e) {
             if (e.altKey) {
-                console.log('alt click')
+                navigateNode(this.config, this.node)
             } else {
                 foldNode(this.config, this.node)
             }
@@ -105,7 +117,8 @@ export default {
     components: {
         'tree-graph-remove-button': TreeGraphRemoveButton,
         'tree-graph-edit-button': TreeGraphEditButton,
-        'tree-graph-create-button': TreeGraphCreateButton
+        'tree-graph-create-button': TreeGraphCreateButton,
+        'tree-graph-parent-button': TreeGraphParentButton
     },
     watch: {
         '{x: node.x, y: node.y}': 'relocate'

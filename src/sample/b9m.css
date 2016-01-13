@@ -68,3 +68,6 @@
 .b9m-graph-btn-remove > circle {
   fill: white;
 }
+.b9m-graph-btn-parent {
+  fill: #57D37E;
+}
