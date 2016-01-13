@@ -1,3 +1,9 @@
+.b9m-graph-breadcrum {
+  font: 10px sans-serif;
+  font-weight: bold;
+  font-family: Cursive;
+  font-size: 16px;
+}
 .b9m-graph-node {
   position: relative;
   display: inline-block;

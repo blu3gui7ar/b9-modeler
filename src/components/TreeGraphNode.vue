@@ -4,7 +4,7 @@
         <text x=15 y=3 text-anchor="start" @click="onTextClick">
             {{node.name}}
         </text>
-        <tree-graph-parent-button :x='-15' :y='-41' v-if='canGoParent' @click="onGoParent" :config='config'>
+        <tree-graph-parent-button :x='-25' :y='-41' v-if='canGoParent' @click="onGoParent" :config='config'>
         </tree-graph-parent-button>
         <tree-graph-remove-button :x='10' :y='-42' :valid='canRemove' @click="onRemove" :config='config'>
         </tree-graph-remove-button>
