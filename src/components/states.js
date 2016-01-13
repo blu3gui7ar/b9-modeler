@@ -21,6 +21,9 @@ export function activeNode () {
 export function editingNode () {
     return this.config.getState().editingNode
 }
+export function displayRoot () {
+    return this.config.getState().displayRoot
+}
 export function relocateSource () {
     return this.config.getState().relocateSource
 }

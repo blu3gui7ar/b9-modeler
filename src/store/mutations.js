@@ -8,7 +8,8 @@ import {
     MODIFY_PLAIN,
     SET_PLAIN,
     RELOCATE_NODE,
-    INIT_LAYOUT
+    INIT_LAYOUT,
+    NAV_NODE
 } from './mutation-types'
 import _ from 'lodash'
 import d3 from 'd3'
@@ -24,6 +25,7 @@ export const initState = {
     layout: d3.layout.tree(),
     nodes: [],
     linkMap: {},
+    displayRoot: basicModel,
     activeNode: basicModel,
     editingNode: basicModel,
     relocateSource: basicModel
@@ -36,6 +38,7 @@ export const mutations = {
         state.editingNode = model
         state.activeNode = model
         state.relocateSource = model
+        state.displayRoot = model
         state.metadata = metadata
         state.model = model
         state.rootMeta = rootMeta
@@ -84,7 +87,7 @@ export const mutations = {
         node.plain = value
     },
     [RELOCATE_NODE] (state) {
-        state.nodes = state.layout.nodes(state.model).reverse()
+        state.nodes = state.layout.nodes(state.displayRoot).reverse()
         const links = state.layout.links(state.nodes)
         state.linkMap = _.reduce(links, (newMap, link) => {
             const l = state.linkMap[link.target.id]
@@ -94,5 +97,8 @@ export const mutations = {
     },
     [INIT_LAYOUT] (state, height, width) {
         state.layout.size([height, width])
+    },
+    [NAV_NODE] (state, node) {
+        state.displayRoot = node
     }
 }
