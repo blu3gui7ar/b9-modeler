@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label v-el:root>{{nodename}}:
+        <label>{{nodename}}:
             <template v-for="choice in nodemeta.choices">
                 <label>{{choice}}
                     <input type='radio' @click="onClick" :name="noderef"

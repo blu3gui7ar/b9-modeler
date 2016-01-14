@@ -1,8 +1,11 @@
 <template>
     <div>
-        <label>{{nodename}}
-            <select>
-                <option value='nodedata'></option>
+        <label>{{nodename}}:
+            <select @change="onChange">
+                <option :selected="isSelected()" :value="nothing">---</option>
+                <template v-for="option in nodemeta.options">
+                    <option :value="option" :selected="isSelected(optioin)">{{option}}</option>
+                </template>
             </select>
         </label>
     </div>
@@ -14,13 +17,25 @@ import metacomp from '../metacomp'
 import DefaultHandler from '../DefaultHandler'
 
 export default {
+    data () {
+        return {
+            nothing: '-_-undefined-_-'
+        }
+    },
     mixins: [commons, metacomp],
     props: {
         nodedata: String
     },
     methods: {
-        onInput (e) {
-            this.$parent.$emit('set', this.noderef, e.target.value)
+        isSelected (option) {
+            return this.nodedata === option
+        },
+        onChange (e) {
+            let v = e.target.value
+            if (v === this.nothing) {
+                v = undefined
+            }
+            this.$parent.$emit('set', this.noderef, v)
         }
     },
     handler (metadata, metaname) {
