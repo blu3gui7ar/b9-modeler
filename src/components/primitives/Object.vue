@@ -55,7 +55,7 @@ export class ObjectHandler extends DefaultHandler {
                 .value()
         }
 
-        const keys = _.pluck(childModels, 'key')
+        const keys = _.map(childModels, 'key')
         const disabled = _(childNodes).intersection(keys)
             .reduce((rs, key) => {
                 rs[key] = false

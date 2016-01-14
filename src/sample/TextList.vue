@@ -24,9 +24,7 @@ export default {
     },
     computed: {
         textlist () {
-            return _.reduce(this.nodedata, (str, item) => {
-                return str + item + '\n'
-            }, '').trim()
+            return _.join(this.nodedata, '\n')
         }
     },
     methods: {
@@ -36,13 +34,12 @@ export default {
             this.$parent.$emit('set', this.noderef, textlist.slice(0, limit))
         },
         onKeyPress (e) {
-            const textlist = e.target.value.split('\n')
-            const limit = this.nodemeta.limit || textlist.length
-            if (textlist.length > limit) {
+            const length = e.target.value.split('\n').length + (e.keyCode === 13 ? 1 : 0)
+            const limit = this.nodemeta.limit || length
+            if (length > limit) {
                 e.preventDefault()
             }
         }
-
     },
     handler (metadata, metaname) {
         return new TextListHandler(metadata, metaname)
