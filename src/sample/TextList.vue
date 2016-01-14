@@ -12,9 +12,6 @@ export class TextListHandler extends DefaultHandler {
     defaultData () {
         return []
     }
-    hasNode () {
-        return false
-    }
 }
 
 export default {

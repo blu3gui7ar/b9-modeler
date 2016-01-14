@@ -1,12 +1,12 @@
 <template>
     <div>
         <label>{{nodename}}: </label>
-        <div v-for="(attr, value) in nodedata">
+        <div v-for="attr in attrs">
             <component :is='component(attrMeta(attr))'
                        :nodename='attr'
                        :noderef='attr'
                        :metaname='attrMeta(attr)'
-                       :nodedata='value'
+                       :nodedata='attrValue(attr)'
                        :config='config'>
             </component>
         </div>
@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import _ from 'lodash'
 import commons from './commons'
 import metacomp from '../metacomp'
@@ -112,15 +113,35 @@ export default {
     props: {
         nodedata: Object
     },
+    computed: {
+        attrs () {
+            if (!this.nodemeta) {
+                return []
+            }
+            const metadata = this.metadata
+            let attrs = this.nodemeta.attrs
+            if (_.isArray(attrs)) {
+                attrs = _.zip(attrs, attrs)
+            }
+            return _(attrs).pickBy((metaname) =>
+                    !metadata.handler(metaname).hasNode(metadata, metadata.meta(metaname))
+                )
+                .keys()
+                .value()
+        }
+    },
     methods: {
         attrMeta (attr) {
             return _.isArray(this.nodemeta.attrs) ? attr : this.nodemeta.attrs[attr]
+        },
+        attrValue (attr) {
+            return this.nodedata[attr] || this.metadata.handler(this.attrMeta(attr)).defaultData()
         },
         onUpdate (child, modify) {
             this.$parent.$emit('update', this.noderef, target => modify(target[child]))
         },
         onSet (child, value) {
-            this.$parent.$emit('update', this.noderef, target => target[child] = value)
+            this.$parent.$emit('update', this.noderef, target => Vue.set(target, child, value))
         }
     },
     handler (metadata, metaname) {
