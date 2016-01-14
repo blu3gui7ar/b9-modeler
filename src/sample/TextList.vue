@@ -1,6 +1,6 @@
 <template>
     <label>{{nodename}}:
-        <textarea @input="onInput">{{textlist}}</textarea>
+        <textarea @input="onInput" @keypress="onKeyPress">{{textlist}}</textarea>
     </label>
 </template>
 
@@ -34,7 +34,15 @@ export default {
             const textlist = e.target.value.split('\n')
             const limit = this.nodemeta.limit || textlist.length
             this.$parent.$emit('set', this.noderef, textlist.slice(0, limit))
+        },
+        onKeyPress (e) {
+            const textlist = e.target.value.split('\n')
+            const limit = this.nodemeta.limit || textlist.length
+            if (textlist.length > limit) {
+                e.preventDefault()
+            }
         }
+
     },
     handler (metadata, metaname) {
         return new TextListHandler(metadata, metaname)
