@@ -3,7 +3,7 @@
         <label v-el:root>{{nodename}}:
             <template v-for="choice in nodemeta.choices">
                 <label>{{choice}}
-                    <input type='checkbox' @click="onClick" :name="nodekey"
+                    <input type='checkbox' @click="onClick" :name="noderef"
                         :checked="isChecked(choice)" :value="choice">
                     </input>
                 </label>

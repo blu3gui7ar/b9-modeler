@@ -1,7 +1,13 @@
 <template>
     <div>
-        <label>{{nodename}}
-            <input type='radio' value='nodedata'></input>
+        <label v-el:root>{{nodename}}:
+            <template v-for="choice in nodemeta.choices">
+                <label>{{choice}}
+                    <input type='radio' @click="onClick" :name="noderef"
+                        :checked="isChecked(choice)" :value="choice">
+                    </input>
+                </label>
+            </template>
         </label>
     </div>
 </template>
@@ -17,7 +23,10 @@ export default {
         nodedata: String
     },
     methods: {
-        onInput (e) {
+        isChecked (choice) {
+            return this.nodedata === choice
+        },
+        onClick (e) {
             this.$parent.$emit('set', this.noderef, e.target.value)
         }
     },

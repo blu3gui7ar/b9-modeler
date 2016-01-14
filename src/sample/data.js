@@ -4,6 +4,7 @@ export const metadata = {
         attrs: {
             description: 'desc',
             lang: 'languages',
+            leaf: 'leaf',
             attributes: 'attributes',
             styles: 'styles',
             imgs: 'images',
@@ -12,6 +13,7 @@ export const metadata = {
     },
     desc: {type: 'map', flatten: true, value: 'info'},
     languages: {type: 'checkbox', choices: ['en', 'fr', 'de']},
+    leaf: {type: 'radio', choices: ['true', 'false']},
     attributes: {type: 'list', value: 'attribute'},
     attribute: {type: 'ref', target: 'attribute:'},
     styles: {type: 'list', flatten: false, value: 'style'},
