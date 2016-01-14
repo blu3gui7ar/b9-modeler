@@ -1,8 +1,8 @@
 <template>
-    <div v-for="(idx, value) in nodedata">
+    <div v-for="value in nodedata" track-by="$index">
         <component :is='component(nodemeta.value)'
-                   :nodename='idx'
-                   :noderef='idx'
+                   :nodename='$index'
+                   :noderef='$index'
                    :metaname='nodemeta.value'
                    :nodedata='value'
                    :config='config'>
@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import _ from 'lodash'
 import commons from './commons'
 import metacomp from '../metacomp'
@@ -92,7 +91,7 @@ export default {
             this.$parent.$emit('update', this.noderef, target => modify(target[child]))
         },
         onSet (child, value) {
-            this.$parent.$emit('update', this.noderef, target => Vue.set(target, child, value))
+            this.$parent.$emit('update', this.noderef, target => target.splice(child, 1, value))
         }
     },
     handler (metadata, metaname) {

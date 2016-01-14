@@ -17,7 +17,7 @@ export const metadata = {
     leaf: {type: 'radio', choices: ['true', 'false']},
     gender: {type: 'select', options: ['male', 'female', 'unisex']},
     attributes: {type: 'list', value: 'attribute'},
-    attribute: {type: 'ref', target: 'attribute:'},
+    attribute: {type: 'text', limit: 1},
     styles: {type: 'list', flatten: false, value: 'style'},
     style: {type: 'ref', target: 'style:'},
     images: {type: 'textlist', limit: 5},

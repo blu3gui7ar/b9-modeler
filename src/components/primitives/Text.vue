@@ -1,6 +1,6 @@
 <template>
     <label>{{nodename}}:
-        <input type='text' :value='nodedata' @input="onInput"></input>
+        <textarea @input="onInput" @keypress="onKeyPress">{{nodedata}}</textarea>
     </label>
 </template>
 
@@ -17,6 +17,13 @@ export default {
     methods: {
         onInput (e) {
             this.$parent.$emit('set', this.noderef, e.target.value)
+        },
+        onKeyPress (e) {
+            const length = e.target.value.split('\n').length + (e.keyCode === 13 ? 1 : 0)
+            const limit = this.nodemeta.limit || length
+            if (length > limit) {
+                e.preventDefault()
+            }
         }
     },
     handler (metadata, metaname) {

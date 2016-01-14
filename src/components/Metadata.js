@@ -14,7 +14,11 @@ export default class Metadata {
         return type
     }
     meta (metaname) {
-        return this.desc[metaname]
+        let m = this.desc[metaname]
+        if (m === undefined) {
+            m = {type: 'text'}
+        }
+        return m
     }
     component (metaname) {
         return registry.getComponentName(this.type(metaname))

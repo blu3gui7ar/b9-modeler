@@ -1,8 +1,8 @@
 <template>
     <div>
         <tree-graph v-if="showGraph" :config='config' :model="model" :width='500' :height='700'></tree-graph>
-        <div>{{showContent}}</div>
         <plain-editor v-if="showPlain" :config='config' :node="editingNode"></plain-editor>
+        <pre>{{data | json}}</pre>
     </div>
 </template>
 
@@ -21,8 +21,8 @@ export default {
         metadata,
         rootMeta,
         editingNode,
-        showContent () {
-            return JSON.stringify(this.metadata.fromGraphModel(this.model, this.rootMeta))
+        data () {
+            return this.metadata.fromGraphModel(this.model, this.rootMeta)
         },
         showGraph () {
             return this.model.name !== undefined && this.model.name !== null
