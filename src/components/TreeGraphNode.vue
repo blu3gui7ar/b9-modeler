@@ -19,6 +19,7 @@
 
 <script>
 import d3 from 'd3'
+import _ from 'lodash'
 import TreeGraphRemoveButton from './TreeGraphRemoveButton'
 import TreeGraphEditButton from './TreeGraphEditButton'
 import TreeGraphCreateButton from './TreeGraphCreateButton'
@@ -87,7 +88,8 @@ export default {
         },
         onCreate (child, valid) {
             if (valid) {
-                addNode(this.config, this.node, child)
+                const handler = this.metadata.handler(this.node.metaname)
+                addNode(this.config, this.node, handler.newNodeName(child))
             }
         },
         onMouseOver () {
@@ -100,7 +102,11 @@ export default {
                 if (pHandler.modifiable(n.key)) {
                     var name = prompt('Input new name:', n.name)
                     if (name !== null) {
-                        modifyNodeName(this.config, n, target => pHandler.modifyGraphModel(target, name))
+                        if (!_.some(n.parent.children, child => child.name === name)) {
+                            modifyNodeName(this.config, n, target => pHandler.modifyGraphModel(target, name))
+                        } else {
+                            // duplicate node name
+                        }
                     }
                 }
             }

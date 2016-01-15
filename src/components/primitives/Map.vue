@@ -87,6 +87,9 @@ export class MapHandler extends DefaultHandler {
         subModel.name = newName
         subModel.key = newName
     }
+    newNodeName (child) {
+        return child + Math.floor(Math.random() * 100) + Date.now()
+    }
 }
 
 export default {

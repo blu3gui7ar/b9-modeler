@@ -41,4 +41,7 @@ export default class DefaultHandler {
     normalize (metaItem) {
         return metaItem
     }
+    newNodeName (child) {
+        return child
+    }
 }
