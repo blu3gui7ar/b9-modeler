@@ -1,12 +1,17 @@
 <template>
-    <div v-for="value in nodedata" track-by="$index">
-        <component :is='component(nodemeta.value)'
-                   :nodename='$index'
-                   :noderef='$index'
-                   :metaname='nodemeta.value'
-                   :nodedata='value'
-                   :config='config'>
-        </component>
+    <div>
+        <label>{{nodename}}:</label>
+        <div @click="onAppend">Append</div>
+        <div v-for="value in nodedata" track-by="$index">
+            <component :is='component(nodemeta.value)'
+                       :nodename='$index'
+                       :noderef='$index'
+                       :metaname='nodemeta.value'
+                       :nodedata='value'
+                       :config='config'>
+            </component>
+            <span @click="onRemove($index)">Remove</span>
+        </div>
     </div>
 </template>
 
@@ -87,6 +92,12 @@ export default {
         nodedata: Array
     },
     methods: {
+        onAppend (e) {
+            this.$parent.$emit('update', this.noderef, target => target.splice(target.length, 0, ''))
+        },
+        onRemove (child) {
+            this.$parent.$emit('update', this.noderef, target => target.splice(child, 1))
+        },
         onUpdate (child, modify) {
             this.$parent.$emit('update', this.noderef, target => modify(target[child]))
         },
