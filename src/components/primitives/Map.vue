@@ -1,13 +1,13 @@
 <template>
     <div>
         <label>{{nodename}}: </label>
-        <div v-for="(key, value) in nodedata" track-by="$index">
-                <input type="text" @input="onInput($event, key)" :value="key"></input>
+        <div v-for="tracked in tracker" track-by="org">
+                <input type="text" @input="onInput($event, tracked)" :value="tracked.curr"></input>
                 <component :is='component(nodemeta.value)'
                            :nodename='""'
-                           :noderef='key'
+                           :noderef='tracked.curr'
                            :metaname='nodemeta.value'
-                           :nodedata='value'
+                           :nodedata='nodedata[tracked.curr]'
                            :config='config'>
                 </component>
         </div>
@@ -89,27 +89,22 @@ export class MapHandler extends DefaultHandler {
 
 export default {
     mixins: [commons, metacomp],
+    data () {
+        return {
+            tracker: []
+        }
+    },
     props: {
         nodedata: Object
     },
     methods: {
-        onInput (e, original) {
+        onInput (e, tracked) {
             let child = e.target.value
             this.$parent.$emit('update', this.noderef, target => {
-                // preserve the order to avoid widget redraw
-                let found = false
-                for (let k in target) {
-                    let nk = k
-                    if (k === original) {
-                        found = true
-                        nk = child
-                    }
-                    if (found) {
-                        const v = target[k]
-                        Vue.delete(target, k)
-                        Vue.set(target, nk, v)
-                    }
-                }
+                Vue.set(target, child, target[tracked.curr])
+                Vue.delete(target, tracked.curr)
+
+                tracked.curr = child
             })
         },
         onUpdate (child, modify) {
@@ -118,6 +113,11 @@ export default {
         onSet (child, value) {
             this.$parent.$emit('update', this.noderef, target => Vue.set(target, child, value))
         }
+    },
+    created () {
+        _(this.nodedata).forEach((value, key) => {
+            this.tracker.push({org: key, curr: key, val: value})
+        })
     },
     handler (metadata, metaname) {
         return new MapHandler(metadata, metaname)
