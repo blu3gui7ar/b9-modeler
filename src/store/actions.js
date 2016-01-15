@@ -9,7 +9,8 @@ import {
     SET_PLAIN,
     RELOCATE_NODE,
     INIT_LAYOUT,
-    NAV_NODE
+    NAV_NODE,
+    MODIFY_NODE_NAME
 } from './mutation-types'
 
 export const initLayout = ({ dispatch }, height, width) => {
@@ -58,4 +59,8 @@ export const setPlain = ({ dispatch }, node, value) => {
 export const navigateNode = ({ dispatch }, node) => {
     dispatch(NAV_NODE, node)
     dispatch(RELOCATE_NODE)
+}
+
+export const modifyNodeName = ({ dispatch }, node, modify) => {
+    dispatch(MODIFY_NODE_NAME, node, modify)
 }

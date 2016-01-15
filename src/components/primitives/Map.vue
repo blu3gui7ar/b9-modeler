@@ -1,9 +1,10 @@
 <template>
     <div>
         <label>{{nodename}}: </label>
-        <div v-for="(key, value) in nodedata">
+        <div v-for="(key, value) in nodedata" track-by="$index">
+                <input type="text" @input="onInput($event, key)" :value="key"></input>
                 <component :is='component(nodemeta.value)'
-                           :nodename='key'
+                           :nodename='""'
                            :noderef='key'
                            :metaname='nodemeta.value'
                            :nodedata='value'
@@ -41,7 +42,7 @@ export class MapHandler extends DefaultHandler {
         const metadata = this.metadata
         const nodemeta = this.nodemeta
         const v = nodemeta.value
-        return metadata.handler(v).hasNode(metadata, metadata.meta(v)) ? {v: true} : {}
+        return metadata.handler(v).hasNode(metadata, metadata.meta(v)) ? {[v]: true} : {}
     }
     toGraphModel (data) {
         const metadata = this.metadata
@@ -77,6 +78,13 @@ export class MapHandler extends DefaultHandler {
         }
         return d
     }
+    modifiable (childKey) {
+        return true
+    }
+    modifyGraphModel (subModel, newName) {
+        subModel.name = newName
+        subModel.key = newName
+    }
 }
 
 export default {
@@ -85,6 +93,25 @@ export default {
         nodedata: Object
     },
     methods: {
+        onInput (e, original) {
+            let child = e.target.value
+            this.$parent.$emit('update', this.noderef, target => {
+                // preserve the order to avoid widget redraw
+                let found = false
+                for (let k in target) {
+                    let nk = k
+                    if (k === original) {
+                        found = true
+                        nk = child
+                    }
+                    if (found) {
+                        const v = target[k]
+                        Vue.delete(target, k)
+                        Vue.set(target, nk, v)
+                    }
+                }
+            })
+        },
         onUpdate (child, modify) {
             this.$parent.$emit('update', this.noderef, target => modify(target[child]))
         },

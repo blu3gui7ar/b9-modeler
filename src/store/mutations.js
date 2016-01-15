@@ -9,7 +9,8 @@ import {
     SET_PLAIN,
     RELOCATE_NODE,
     INIT_LAYOUT,
-    NAV_NODE
+    NAV_NODE,
+    MODIFY_NODE_NAME
 } from './mutation-types'
 import _ from 'lodash'
 import d3 from 'd3'
@@ -100,5 +101,8 @@ export const mutations = {
     },
     [NAV_NODE] (state, node) {
         state.displayRoot = node
+    },
+    [MODIFY_NODE_NAME] (state, node, modify) {
+        modify(node)
     }
 }

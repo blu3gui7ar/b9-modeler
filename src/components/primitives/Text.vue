@@ -20,8 +20,8 @@ export default {
         },
         onKeyPress (e) {
             const length = e.target.value.split('\n').length + (e.keyCode === 13 ? 1 : 0)
-            const limit = this.nodemeta.limit || length
-            if (length > limit) {
+            const line = this.nodemeta.line || length
+            if (length > line) {
                 e.preventDefault()
             }
         }

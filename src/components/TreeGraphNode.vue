@@ -27,7 +27,7 @@ import TreeGraphParentButton from './TreeGraphParentButton'
 import { metadata, displayRoot, relocateSource, cssPrefix } from './states'
 import config from './config'
 import actions from './actions'
-const { activateNode, addNode, deleteNode, editNode, foldNode, navigateNode } = actions
+const { activateNode, addNode, deleteNode, editNode, foldNode, navigateNode, modifyNodeName } = actions
 
 export default {
     mixins: [config],
@@ -94,19 +94,16 @@ export default {
             activateNode(this.config, this.node)
         },
         onTextClick () {
-            /*
-            var key = prompt("Input map key:", d.key);
-            if (key != null){
-                d.key = key;
-                d3.select(this).text(function(d) {
-                    var text = d.name;
-                    if(d.key){
-                        text += "["+d.key+"]";
+            const n = this.node
+            if (n.parent) {
+                const pHandler = this.metadata.handler(n.parent.metaname)
+                if (pHandler.modifiable(n.key)) {
+                    var name = prompt('Input new name:', n.name)
+                    if (name !== null) {
+                        modifyNodeName(this.config, n, target => pHandler.modifyGraphModel(target, name))
                     }
-                    return text;
-                })
+                }
             }
-            */
         },
         relocate (oldNode, newNode) {
             d3.select(this.$el).transition()

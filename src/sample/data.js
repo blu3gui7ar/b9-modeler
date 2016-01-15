@@ -3,6 +3,7 @@ export const metadata = {
         type: 'object',
         attrs: {
             description: 'desc',
+            extensions: 'extensions',
             lang: 'languages',
             leaf: 'leaf',
             gender: 'gender',
@@ -13,14 +14,16 @@ export const metadata = {
         }
     },
     desc: {type: 'map', flatten: true, value: 'info'},
+    extensions: {type: 'map', value: 'ext'},
+    ext: {type: 'object', attrs: {type: 'type', value: 'value'}},
     languages: {type: 'checkbox', choices: ['en', 'fr', 'de']},
     leaf: {type: 'radio', choices: ['true', 'false']},
     gender: {type: 'select', options: ['male', 'female', 'unisex']},
     attributes: {type: 'list', value: 'attribute'},
-    attribute: {type: 'text', limit: 1},
+    attribute: {type: 'text', line: 1},
     styles: {type: 'list', flatten: false, value: 'style'},
     style: {type: 'ref', target: 'style:'},
-    images: {type: 'textlist', limit: 5},
+    images: {type: 'textlist', line: 5},
     subcats: {type: 'list', value: 'category'}
 }
 
@@ -29,6 +32,12 @@ export const data = {
         'title': 'RootCat',
         'category': 'Wedding Dress',
         'color': 'Red'
+    },
+    extensions: {
+        'shipExt': {
+            type: 'dresses',
+            value: '1~2 days'
+        }
     },
     attributes: [
         'attribute:123',

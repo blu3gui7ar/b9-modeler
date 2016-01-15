@@ -33,4 +33,9 @@ export default class DefaultHandler {
     toData (graphModel) {
         return graphModel.plain === undefined ? this.defaultData() : graphModel.plain
     }
+    modifiable (childKey) {
+        return false
+    }
+    modifyGraphModel (graphModel, newName) {
+    }
 }

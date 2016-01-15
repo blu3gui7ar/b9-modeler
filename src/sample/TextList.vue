@@ -27,13 +27,13 @@ export default {
     methods: {
         onInput (e) {
             const textlist = e.target.value.split('\n')
-            const limit = this.nodemeta.limit || textlist.length
-            this.$parent.$emit('set', this.noderef, textlist.slice(0, limit))
+            const line = this.nodemeta.line || textlist.length
+            this.$parent.$emit('set', this.noderef, textlist.slice(0, line))
         },
         onKeyPress (e) {
             const length = e.target.value.split('\n').length + (e.keyCode === 13 ? 1 : 0)
-            const limit = this.nodemeta.limit || length
-            if (length > limit) {
+            const line = this.nodemeta.line || length
+            if (length > line) {
                 e.preventDefault()
             }
         }
