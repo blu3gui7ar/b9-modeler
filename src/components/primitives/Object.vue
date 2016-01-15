@@ -34,27 +34,16 @@ export class ObjectHandler extends DefaultHandler {
         }
     }
     childMetaName (childName, childKey) {
-        if (_.isArray(this.nodemeta.attrs)) {
-            return childName
-        } else {
-            return this.nodemeta.attrs[childName]
-        }
+        return this.nodemeta.attrs[childName]
     }
     childGen (childModels) {
         const metadata = this.metadata
         const nodemeta = this.nodemeta
-        let childNodes = []
-        if (_.isArray(nodemeta.attrs)) {
-            childNodes = _.filter(nodemeta.attrs, metaname =>
-                metadata.handler(metaname).hasNode(metadata, metadata.meta(metaname))
-            )
-        } else {
-            childNodes = _(nodemeta.attrs)
+        const childNodes = _(nodemeta.attrs)
                 .map((metaname, name) => { return {m: metaname, n: name}})
                 .filter(attr => metadata.handler(attr.m).hasNode(metadata, metadata.meta(attr.m)))
                 .map(attr => attr.n)
                 .value()
-        }
 
         const keys = _.map(childModels, 'key')
         const disabled = _(childNodes).intersection(keys)
@@ -73,10 +62,7 @@ export class ObjectHandler extends DefaultHandler {
         const metadata = this.metadata
         const nodemeta = this.nodemeta
         return _(data || this.defaultData()).reduce((graphModel, subData, attr) => {
-            let metaname = attr
-            if (!_.isArray(nodemeta.attrs)) {
-                metaname = nodemeta.attrs[attr]
-            }
+            const metaname = nodemeta.attrs[attr]
             const subHandler = metadata.handler(metaname)
             if (subHandler.hasNode()) {
                 const subModel = subHandler.toGraphModel(subData)
@@ -106,6 +92,14 @@ export class ObjectHandler extends DefaultHandler {
         }
         return d
     }
+    normalize (metaItem) {
+        const attrs = metaItem.attrs
+        if (_.isArray(attrs)) {
+            return {...metaItem, attrs: _.zipObject(attrs, attrs)}
+        } else {
+            return metaItem
+        }
+    }
 }
 
 export default {
@@ -119,11 +113,7 @@ export default {
                 return []
             }
             const metadata = this.metadata
-            let attrs = this.nodemeta.attrs
-            if (_.isArray(attrs)) {
-                attrs = _.zip(attrs, attrs)
-            }
-            return _(attrs).pickBy((metaname) =>
+            return _(this.nodemeta.attrs).pickBy((metaname) =>
                     !metadata.handler(metaname).hasNode(metadata, metadata.meta(metaname))
                 )
                 .keys()
@@ -132,7 +122,7 @@ export default {
     },
     methods: {
         attrMeta (attr) {
-            return _.isArray(this.nodemeta.attrs) ? attr : this.nodemeta.attrs[attr]
+            return this.nodemeta.attrs[attr]
         },
         attrValue (attr) {
             return this.nodedata[attr] || this.metadata.handler(this.attrMeta(attr)).defaultData()

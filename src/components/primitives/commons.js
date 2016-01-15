@@ -17,8 +17,11 @@ export default {
     },
     computed: {
         metadata,
+        metaHandler () {
+            return this.metadata.handler(this.metaname)
+        },
         nodemeta () {
-            return this.metadata.meta(this.metaname)
+            return this.metaHandler.normalize(this.metadata.meta(this.metaname))
         }
     }
 }

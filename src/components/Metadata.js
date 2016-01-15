@@ -1,3 +1,4 @@
+// import _ from 'lodash'
 import registry from './registry'
 
 export default class Metadata {
@@ -16,7 +17,7 @@ export default class Metadata {
     meta (metaname) {
         let m = this.desc[metaname]
         if (m === undefined) {
-            m = {type: 'text'}
+            m = {type: this.type(metaname)}
         }
         return m
     }

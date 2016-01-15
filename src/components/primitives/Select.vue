@@ -3,8 +3,8 @@
         <label>{{nodename}}:
             <select @change="onChange">
                 <option :selected="isSelected()" :value="nothing">---</option>
-                <template v-for="option in nodemeta.options">
-                    <option :value="option" :selected="isSelected(optioin)">{{option}}</option>
+                <template v-for="(name, option) in nodemeta.options">
+                    <option :value="option" :selected="isSelected(optioin)">{{name}}</option>
                 </template>
             </select>
         </label>
@@ -12,9 +12,21 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import commons from './commons'
 import metacomp from '../metacomp'
 import DefaultHandler from '../DefaultHandler'
+
+export class OptionHandler extends DefaultHandler {
+    normalize (metaItem) {
+        const options = metaItem.options
+        if (_.isArray(options)) {
+            return {...metaItem, options: _.zipObject(options, options)}
+        } else {
+            return metaItem
+        }
+    }
+}
 
 export default {
     data () {
@@ -39,7 +51,7 @@ export default {
         }
     },
     handler (metadata, metaname) {
-        return new DefaultHandler(metadata, metaname)
+        return new OptionHandler(metadata, metaname)
     }
 }
 </script>

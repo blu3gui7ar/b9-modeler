@@ -1,8 +1,8 @@
 <template>
     <div>
         <label>{{nodename}}:
-            <template v-for="choice in nodemeta.choices">
-                <label>{{choice}}
+            <template v-for="(name, choice) in nodemeta.choices">
+                <label>{{name}}
                     <input type='checkbox' @click="onClick" :name="noderef"
                         :checked="isChecked(choice)" :value="choice">
                     </input>
@@ -21,6 +21,14 @@ import DefaultHandler from '../DefaultHandler'
 export class CheckboxHandler extends DefaultHandler {
     defaultData () {
         return []
+    }
+    normalize (metaItem) {
+        const choices = metaItem.choices
+        if (_.isArray(choices)) {
+            return {...metaItem, choices: _.zipObject(choices, choices)}
+        } else {
+            return metaItem
+        }
     }
 }
 

@@ -2,7 +2,7 @@ export default class DefaultHandler {
     constructor (metadata, metaname) {
         this.metadata = metadata
         this.metaname = metaname
-        this.nodemeta = metadata.meta(metaname)
+        this.nodemeta = this.normalize(metadata.meta(metaname))
     }
     defaultData () {
         return ''
@@ -37,5 +37,8 @@ export default class DefaultHandler {
         return false
     }
     modifyGraphModel (graphModel, newName) {
+    }
+    normalize (metaItem) {
+        return metaItem
     }
 }

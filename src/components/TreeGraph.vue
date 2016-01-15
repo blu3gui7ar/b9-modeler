@@ -46,7 +46,6 @@ export default {
             let breadcrums = []
             let node = this.displayRoot
             while (node.parent !== undefined && node.parent !== null) {
-                console.log(node.name)
                 breadcrums.push(node.parent)
                 node = node.parent
             }
