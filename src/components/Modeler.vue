@@ -37,8 +37,8 @@ export default {
             foldNode(this.config, this.model)
         }
     },
-    ready () {
-        this.$on('fold', this.onFold)
+    events: {
+        fold: 'onFold'
     },
     components: {
         'tree-graph': TreeGraph,

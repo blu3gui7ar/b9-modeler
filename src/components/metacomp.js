@@ -15,8 +15,8 @@ export default {
             console.log('default set')
         }
     },
-    ready () {
-        this.$on('update', this.onUpdate)
-        this.$on('set', this.onSet)
+    events: {
+        update: 'onUpdate',
+        set: 'onSet'
     }
 }
