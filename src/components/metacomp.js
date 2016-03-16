@@ -1,9 +1,6 @@
-import { metadata } from './states'
+import { metadata } from './getters'
 
 export default {
-    computed: {
-        metadata
-    },
     methods: {
         component (metaname) {
             return this.metadata.component(metaname)
@@ -18,5 +15,10 @@ export default {
     events: {
         update: 'onUpdate',
         set: 'onSet'
+    },
+    vuex: {
+        getters: {
+            metadata
+        }
     }
 }

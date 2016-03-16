@@ -6,10 +6,8 @@
 </template>
 
 <script>
-import config from './config'
-import { cssPrefix } from './states'
+import { cssPrefix } from './getters'
 export default {
-    mixins: [config],
     data () {
         return {
             icon: 'm 0,12.362183 10,12.883883 0,-4.883883 10,0 0,-16.0000004 -10,0 0,-4.2928932 z'
@@ -20,7 +18,6 @@ export default {
         y: Number
     },
     computed: {
-        cssPrefix,
         btnClass () {
             return {
                 [this.cssPrefix + 'graph-btn']: true,
@@ -30,6 +27,9 @@ export default {
         transform () {
             return 'translate(' + this.y + ',' + this.x + ')'
         }
+    },
+    vuex: {
+        cssPrefix
     }
 }
 </script>

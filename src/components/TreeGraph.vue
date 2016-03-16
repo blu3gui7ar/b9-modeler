@@ -1,11 +1,11 @@
 <template>
     <svg :width='width' :height='height'>
         <g :transform="transform">
-            <tree-graph-breadcrum v-for="breadcrum in breadcrums" :x="0" :y="top + $index * 20" :node="breadcrum" :config='config' @click="onBreadcrumClick(breadcrum)">
+            <tree-graph-breadcrum v-for="breadcrum in breadcrums" :x="0" :y="top + $index * 20" :node="breadcrum" @click="onBreadcrumClick(breadcrum)">
             </tree-graph-breadcrum>
-            <tree-graph-link v-for="link in links" :link="link" :config='config'>
+            <tree-graph-link v-for="link in links" :link="link">
             </tree-graph-link >
-            <tree-graph-node v-ref:gns v-for="node in nodes" :config='config'
+            <tree-graph-node v-ref:gns v-for="node in nodes"
                 :node="node" :active="isActive(node)" :editing="isEditing(node)">
             </tree-graph-node>
         </g>
@@ -17,13 +17,10 @@ import _ from 'lodash'
 import TreeGraphBreadcrum from './TreeGraphBreadcrum'
 import TreeGraphNode from './TreeGraphNode'
 import TreeGraphLink from './TreeGraphLink'
-import { nodes, links, editingNode, activeNode, displayRoot } from './states'
-import config from './config'
-import actions from './actions'
-const { initLayout, navigateNode } = actions
+import { nodes, links, editingNode, activeNode, displayRoot } from './getters'
+import { initLayout, navigateNode } from './actions'
 
 export default {
-    mixins: [config],
     data () {
         return {
             left: 50,
@@ -37,11 +34,6 @@ export default {
         height: Number
     },
     computed: {
-        nodes,
-        links,
-        activeNode,
-        editingNode,
-        displayRoot,
         breadcrums () {
             let breadcrums = []
             let node = this.displayRoot
@@ -64,17 +56,30 @@ export default {
         },
         onBreadcrumClick (node) {
             if (node !== null && node !== undefined) {
-                navigateNode(this.config, node)
+                this.navigateNode(node)
             }
         }
     },
     created () {
-        initLayout(this.config, this.height - this.top - this.bottom, this.width - this.left - this.right)
+        this.initLayout(this.height - this.top - this.bottom, this.width - this.left - this.right)
     },
     components: {
         'tree-graph-node': TreeGraphNode,
         'tree-graph-link': TreeGraphLink,
         'tree-graph-breadcrum': TreeGraphBreadcrum
+    },
+    vuex: {
+        getters: {
+            nodes,
+            links,
+            activeNode,
+            editingNode,
+            displayRoot
+        },
+        actions: {
+            initLayout,
+            navigateNode
+        }
     }
 }
 </script>

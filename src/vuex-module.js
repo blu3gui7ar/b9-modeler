@@ -15,11 +15,11 @@ import {
 import _ from 'lodash'
 import d3 from 'd3'
 import Vue from 'vue'
-import Metadata from '../components/Metadata'
+import Metadata from './components/Metadata'
 
 const basicMeta = new Metadata({model: {type: 'object', attrs: []}})
 const basicModel = basicMeta.toGraphModel({}, 'model', 'model', true)
-export const initState = {
+const state = {
     metadata: basicMeta,
     model: basicModel,
     rootMeta: 'model',
@@ -32,8 +32,8 @@ export const initState = {
     relocateSource: basicModel
 }
 
-export const mutations = {
-    [SET_DATA] (state, metaDesc, data, root, rootMeta, fold) {
+const mutations = {
+    [SET_DATA] (state, metaDesc, data, root, rootMeta, fold, cssPrefix) {
         const metadata = new Metadata(metaDesc)
         const model = metadata.toGraphModel(data, root, rootMeta, fold)
         state.editingNode = model
@@ -43,6 +43,7 @@ export const mutations = {
         state.metadata = metadata
         state.model = model
         state.rootMeta = rootMeta
+        state.cssPrefix = cssPrefix
     },
     [ADD_NODE] (state, node, child) {
         const metadata = state.metadata
@@ -106,3 +107,9 @@ export const mutations = {
         modify(node)
     }
 }
+
+export {
+    state,
+    mutations
+}
+

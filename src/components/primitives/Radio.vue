@@ -13,21 +13,9 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import commons from './commons'
 import metacomp from '../metacomp'
-import DefaultHandler from '../DefaultHandler'
-
-export class RadioHandler extends DefaultHandler {
-    normalize (metaItem) {
-        const choices = metaItem.choices
-        if (_.isArray(choices)) {
-            return {...metaItem, choices: _.zipObject(choices, choices)}
-        } else {
-            return metaItem
-        }
-    }
-}
+import RadioHandler from './RadioHandler'
 
 export default {
     mixins: [commons, metacomp],

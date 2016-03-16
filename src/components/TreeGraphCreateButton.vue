@@ -7,10 +7,8 @@
 </template>
 
 <script>
-import config from './config'
-import { cssPrefix } from './states'
+import { cssPrefix } from './getters'
 export default {
-    mixins: [config],
     props: {
         name: String,
         x: Number,
@@ -18,7 +16,6 @@ export default {
         valid: Boolean
     },
     computed: {
-        cssPrefix,
         btnClass () {
             return {
                 [this.cssPrefix + 'graph-btn']: true,
@@ -28,6 +25,11 @@ export default {
         },
         transform () {
             return 'translate(' + this.y + ',' + this.x + ')'
+        }
+    },
+    vuex: {
+        getters: {
+            cssPrefix
         }
     }
 }

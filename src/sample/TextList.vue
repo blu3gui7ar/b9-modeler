@@ -6,13 +6,8 @@
 
 <script>
 import _ from 'lodash'
-import { commons, metacomp, DefaultHandler } from '../main'
-
-export class TextListHandler extends DefaultHandler {
-    defaultData () {
-        return []
-    }
-}
+import { commons, metacomp } from '../main'
+import TextListHandler from './TextListHandler'
 
 export default {
     mixins: [commons, metacomp],
