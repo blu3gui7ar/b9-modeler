@@ -7,10 +7,10 @@ import DefaultHandler from './components/DefaultHandler'
 import registry from './components/registry'
 import metacomp from './components/metacomp'
 import commons from './components/primitives/commons'
-import VuexGetter from './vuex-getter-plugin'
+import VuexGetters from './vuex-getters-plugin'
 
 export {
-    VuexGetter,
+    VuexGetters,
     Modeler,
     TreeGraph,
     PlainEditor,
