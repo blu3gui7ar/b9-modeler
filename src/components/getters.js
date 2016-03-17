@@ -1,32 +1,32 @@
 import _ from 'lodash'
 
 export function rootMeta (state) {
-    return state.b9m.rootMeta
+    return state.rootMeta
 }
 export function metadata (state) {
-    return state.b9m.metadata
+    return state.metadata
 }
 export function model (state) {
-    return state.b9m.model
+    return state.model
 }
 export function nodes (state) {
-    return state.b9m.nodes
+    return state.nodes
 }
 export function links (state) {
-    return _.toArray(state.b9m.linkMap)
+    return _.toArray(state.linkMap)
 }
 export function activeNode (state) {
-    return state.b9m.activeNode
+    return state.activeNode
 }
 export function editingNode (state) {
-    return state.b9m.editingNode
+    return state.editingNode
 }
 export function displayRoot (state) {
-    return state.b9m.displayRoot
+    return state.displayRoot
 }
 export function relocateSource (state) {
-    return state.b9m.relocateSource
+    return state.relocateSource
 }
 export function cssPrefix (state) {
-    return state.b9m.cssPrefix
+    return state.cssPrefix
 }

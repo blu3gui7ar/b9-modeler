@@ -20,6 +20,7 @@ export default {
         this.$broadcast('fold')
     },
     vuex: {
+        module: 'b9m',
         actions: {
             b9m_init: b9mActions.init
         }

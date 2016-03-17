@@ -29,7 +29,9 @@ export default {
         }
     },
     vuex: {
-        cssPrefix
+        getters: {
+            cssPrefix
+        }
     }
 }
 </script>

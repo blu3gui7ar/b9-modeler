@@ -29,7 +29,8 @@ const state = {
     displayRoot: basicModel,
     activeNode: basicModel,
     editingNode: basicModel,
-    relocateSource: basicModel
+    relocateSource: basicModel,
+    cssPrefix: ''
 }
 
 const mutations = {
