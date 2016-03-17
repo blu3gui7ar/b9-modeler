@@ -7,14 +7,7 @@
 <script>
 import commons from './commons'
 import metacomp from '../metacomp'
-import DefaultHandler from '../DefaultHandler'
-
-export class RefHandler extends DefaultHandler {
-    hasNode () {
-        // return nodemeta.flatten !== undefined && !nodemeta.flatten
-        return !this.nodemeta.flatten
-    }
-}
+import RefHandler from './RefHandler'
 
 export default {
     mixins: [commons, metacomp],

@@ -16,21 +16,7 @@
 import _ from 'lodash'
 import commons from './commons'
 import metacomp from '../metacomp'
-import DefaultHandler from '../DefaultHandler'
-
-export class CheckboxHandler extends DefaultHandler {
-    defaultData () {
-        return []
-    }
-    normalize (metaItem) {
-        const choices = metaItem.choices
-        if (_.isArray(choices)) {
-            return {...metaItem, choices: _.zipObject(choices, choices)}
-        } else {
-            return metaItem
-        }
-    }
-}
+import CheckboxHandler from './CheckboxHandler'
 
 export default {
     mixins: [commons, metacomp],

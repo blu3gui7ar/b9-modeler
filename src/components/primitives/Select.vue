@@ -12,21 +12,9 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import commons from './commons'
 import metacomp from '../metacomp'
-import DefaultHandler from '../DefaultHandler'
-
-export class OptionHandler extends DefaultHandler {
-    normalize (metaItem) {
-        const options = metaItem.options
-        if (_.isArray(options)) {
-            return {...metaItem, options: _.zipObject(options, options)}
-        } else {
-            return metaItem
-        }
-    }
-}
+import SelectHandler from './SelectHandler'
 
 export default {
     data () {
@@ -51,7 +39,7 @@ export default {
         }
     },
     handler (metadata, metaname) {
-        return new OptionHandler(metadata, metaname)
+        return new SelectHandler(metadata, metaname)
     }
 }
 </script>

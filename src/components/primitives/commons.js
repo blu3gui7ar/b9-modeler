@@ -1,4 +1,4 @@
-import { metadata } from '../states'
+import { metadata } from '../getters'
 
 export default {
     props: {
@@ -12,16 +12,19 @@ export default {
                 return typeof value === 'number' || typeof value === 'string'
             }
         },
-        config: Object,
         metaname: String
     },
     computed: {
-        metadata,
         metaHandler () {
             return this.metadata.handler(this.metaname)
         },
         nodemeta () {
             return this.metaHandler.normalize(this.metadata.meta(this.metaname))
+        }
+    },
+    vuex: {
+        getters: {
+            metadata
         }
     }
 }

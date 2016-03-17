@@ -4,15 +4,15 @@
         <text x=15 y=3 text-anchor="start" @click="onTextClick">
             {{node.name}}
         </text>
-        <tree-graph-parent-button :x='-25' :y='-41' v-if='canGoParent' @click="onGoParent" :config='config'>
+        <tree-graph-parent-button :x='-25' :y='-41' v-if='canGoParent' @click="onGoParent">
         </tree-graph-parent-button>
-        <tree-graph-remove-button :x='10' :y='-42' :valid='canRemove' @click="onRemove" :config='config'>
+        <tree-graph-remove-button :x='10' :y='-42' :valid='canRemove' @click="onRemove">
         </tree-graph-remove-button>
-        <tree-graph-edit-button :x='10' :y='-12' @click="onEdit" :config='config'>
+        <tree-graph-edit-button :x='10' :y='-12' @click="onEdit">
         </tree-graph-edit-button>
         <tree-graph-create-button v-for="(btn, enabled) in buttons" :valid='enabled' :name="btn"
                 :x='10' :y='18 + 30 * $index'
-                @click="onCreate(btn, enabled)" :config='config'>
+                @click="onCreate(btn, enabled)">
         </tree-graph-create-button>
     </g>
 </template>
@@ -25,18 +25,11 @@ import TreeGraphEditButton from './TreeGraphEditButton'
 import TreeGraphCreateButton from './TreeGraphCreateButton'
 import TreeGraphParentButton from './TreeGraphParentButton'
 
-import { metadata, displayRoot, relocateSource, cssPrefix } from './states'
-import config from './config'
-import actions from './actions'
-const { activateNode, addNode, deleteNode, editNode, foldNode, navigateNode, modifyNodeName } = actions
+import { metadata, displayRoot, relocateSource, cssPrefix } from './getters'
+import { activateNode, addNode, deleteNode, editNode, foldNode, navigateNode, modifyNodeName } from './actions'
 
 export default {
-    mixins: [config],
     computed: {
-        metadata,
-        displayRoot,
-        relocateSource,
-        cssPrefix,
         transform () {
             return 'translate(' + this.node.y + ',' + this.node.x + ')'
         },
@@ -60,7 +53,6 @@ export default {
         }
     },
     props: {
-        config: Object,
         node: Object,
         active: Boolean,
         editing: Boolean
@@ -68,32 +60,32 @@ export default {
     methods: {
         onGoParent (e) {
             if (this.canGoParent) {
-                navigateNode(this.config, this.node.parent)
+                this.navigateNode(this.node.parent)
             }
         },
         onCircleClick (e) {
             if (e.altKey) {
-                navigateNode(this.config, this.node)
+                this.navigateNode(this.node)
             } else {
-                foldNode(this.config, this.node)
+                this.foldNode(this.node)
             }
         },
         onRemove (e) {
             if (this.canRemove) {
-                deleteNode(this.config, this.node)
+                this.deleteNode(this.node)
             }
         },
         onEdit (e) {
-            editNode(this.config, this.node)
+            this.editNode(this.node)
         },
         onCreate (child, valid) {
             if (valid) {
                 const handler = this.metadata.handler(this.node.metaname)
-                addNode(this.config, this.node, handler.newNodeName(child))
+                this.addNode(this.node, handler.newNodeName(child))
             }
         },
         onMouseOver () {
-            activateNode(this.config, this.node)
+            this.activateNode(this.node)
         },
         onTextClick () {
             const n = this.node
@@ -103,7 +95,7 @@ export default {
                     var name = prompt('Input new name:', n.name)
                     if (name !== null) {
                         if (!_.some(n.parent.children, child => child.name === name)) {
-                            modifyNodeName(this.config, n, target => pHandler.modifyGraphModel(target, name))
+                            this.modifyNodeName(n, target => pHandler.modifyGraphModel(target, name))
                         } else {
                             // duplicate node name
                         }
@@ -147,7 +139,7 @@ export default {
                 const d3e = d3.select(el)
                 // TODO: bug of vue? this inside relocateSource is unbound
                 // const source = this.relocateSource
-                const source = this.config.getState().relocateSource
+                const source = this.relocateSource
                 if (source && this.node.parent) { // root node do not need transition
                     d3e.transition()
                         .duration(500)
@@ -157,6 +149,23 @@ export default {
                     done()
                 }
             }
+        }
+    },
+    vuex: {
+        getters: {
+            metadata,
+            displayRoot,
+            relocateSource,
+            cssPrefix
+        },
+        actions: {
+            activateNode,
+            addNode,
+            deleteNode,
+            editNode,
+            foldNode,
+            navigateNode,
+            modifyNodeName
         }
     }
 }

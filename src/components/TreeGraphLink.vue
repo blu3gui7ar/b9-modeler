@@ -4,19 +4,15 @@
 </template>
 
 <script>
-import config from './config'
-import { relocateSource, cssPrefix } from './states'
+import { relocateSource, cssPrefix } from './getters'
 import d3 from 'd3'
 const diagonal = d3.svg.diagonal().projection(d => [d.y, d.x])
 
 export default {
-    mixins: [config],
     props: {
         link: Object
     },
     computed: {
-        relocateSource,
-        cssPrefix,
         linkClass () {
             return {
                 [this.cssPrefix + 'graph-link']: true
@@ -47,13 +43,18 @@ export default {
             },
             leave (el, done) {
                 const d3e = d3.select(el)
-                const source = this.config.getState().relocateSource
+                const source = this.relocateSource
                 d3e.transition()
                     .duration(500)
                     .attr('d', diagonal({source: source, target: source}))
                     .each('end', done)
-
             }
+        }
+    },
+    vuex: {
+        getters: {
+            relocateSource,
+            cssPrefix
         }
     }
 }
